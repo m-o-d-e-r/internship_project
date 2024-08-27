@@ -1,0 +1,17 @@
+FROM gradle:7.2.0-jdk11 AS build-base
+
+ENV APP_ROOT=/home/gradle/project
+
+USER gradle
+WORKDIR $APP_ROOT
+COPY ./build.gradle ./gradlew ./liquibase.gradle ./pre-commit.gradle ./settings.gradle system.properties $APP_ROOT/
+COPY ./src $APP_ROOT/src
+
+RUN gradle assemble
+
+FROM tomcat:9.0
+
+ENV CATALINA_BASE=/usr/local/tomcat
+
+COPY --from=build-base /home/gradle/project/build/libs/class_schedule.war $CATALINA_BASE/webapps/class_schedule.war
+COPY ./etc/tomcat-users.xml $CATALINA_BASE/conf/tomcat-users.xml

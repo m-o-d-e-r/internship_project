@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  schedule_api:
+    container_name: schedule-api
+    build:
+      context: .
+      dockerfile: ./Dockerfile.api
+    env_file: .env
+    networks:
+      - schedule_network
+
+  schedule_web:
+    container_name: schedule-web
+    build:
+      context: .
+      dockerfile: ./Dockerfile.web
+    env_file: .env
+    networks:
+      - schedule_network
+
+  schedule_nginx:
+    container_name: schedule-nginx
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx-proxy
+    env_file: .env
+    networks:
+      - schedule_network
+    ports:
+      - '8080:80'
+
+networks:
+  schedule_network:
+    name: schedule_network
+    external: true
