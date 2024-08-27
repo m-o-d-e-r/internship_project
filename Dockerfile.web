@@ -1,0 +1,12 @@
+FROM node:18.16.0-alpine AS build-base
+
+WORKDIR /app
+COPY ./frontend /app
+RUN npm config delete proxy
+RUN npm install && npm run build
+
+CMD [ "npm", "run", "start" ]
+
+#FROM nginx:latest
+#COPY --from=build-base /app/build /usr/share/nginx/html
+#COPY ./etc/nginx.scheduler-web.conf /etc/nginx/nginx.conf

@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  postgres:
+    container_name: schedule-db
+    image: postgres
+    env_file: .env
+    networks:
+      - schedule_network
+
+  redis:
+    container_name: schedule-redis
+    image: redis
+    networks:
+      - schedule_network
+
+  mongo:
+    container_name: schedule-mongo
+    image: mongo
+    env_file: .env
+    networks:
+      - schedule_network
+
+networks:
+  schedule_network:
+    name: schedule_network
