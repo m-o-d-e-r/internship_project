@@ -3,12 +3,12 @@ pipeline {
     stages {
         stage('Build API') { 
             steps {
-                docker build -f ./Dockerfile.api -t scheduler_api .
+                sh 'make build_api'
             }
         }
         stage('Build Web') { 
             steps {
-                docker build -f ./Dockerfile.web -t scheduler_web .
+                sh 'make build_web'
             }
         }
         stage('Test') { 
