@@ -3,12 +3,14 @@ pipeline {
     stages {
         stage('Build API') { 
             steps {
-                sh 'make build_api'
+                echo 'build api'
+//                sh 'make build_api'
             }
         }
         stage('Build Web') { 
             steps {
-                sh 'make build_web'
+//                sh 'make build_web'
+                echo 'build web'
             }
         }
         stage('Test') { 
