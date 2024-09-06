@@ -3,9 +3,11 @@ pipeline {
     stages {
         stage('Build API') { 
             steps {
-                echo $USER
-                echo `ip a`
-                make build_api
+                sh'''
+                    echo $USER
+                    echo `ip a`
+                    make build_api
+                '''
             }
         }
         stage('Build Web') { 
