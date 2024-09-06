@@ -3,25 +3,23 @@ pipeline {
     stages {
         stage('Build API') { 
             steps {
-                echo 'build api'
-//                sh 'make build_api'
+                sh 'make build_api'
             }
         }
         stage('Build Web') { 
             steps {
-//                sh 'make build_web'
-                echo 'build web'
+                sh 'make build_web'
             }
         }
-        stage('Test') { 
-            steps {
-                echo tesing
-            }
-        }
-        stage('Deploy') { 
-            steps {
-                echo pushing
-            }
-        }
+//        stage('Test') { 
+//            steps {
+//                echo tesing
+//            }
+//        }
+//        stage('Deploy') { 
+//            steps {
+//                echo pushing
+//            }
+//        }
     }
 }
