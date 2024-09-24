@@ -65,3 +65,7 @@ resource "libvirt_domain" "schedule_app" {
     volume_id = libvirt_volume.fedora_disk.id
   }
 }
+
+output "vm_ip" {
+  value = libvirt_domain.schedule_app.network_interface[0].addresses[0]
+}

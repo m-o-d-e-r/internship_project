@@ -13,5 +13,5 @@
 *.tfstate
 *.tfstate.*
 
-terraform/os_image
-terraform/keys
+terraform/*/os_image
+terraform/*/keys
