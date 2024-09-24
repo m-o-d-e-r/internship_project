@@ -1,20 +1,8 @@
-terraform {
-  required_providers {
-    libvirt = {
-      source  = "dmacvicar/libvirt"
-      version = "0.8.0"
-    }
-  }
-}
-
-provider "libvirt" {
-  uri = "qemu:///system"
-}
 
 resource "libvirt_volume" "fedora_iso" {
   name   = "fedora_image"
-  source = "${path.module}/os_image/Fedora-Cloud-Base-Generic.x86_64-40-1.14.qcow2"
-  format = "qcow2"
+  source = "${path.module}/os_image/${var.vm_os_image_name}"
+  format = var.vm_os_image_format
 }
 
 resource "libvirt_volume" "fedora_disk" {
@@ -27,28 +15,28 @@ data "template_file" "user_data" {
 }
 
 resource "libvirt_cloudinit_disk" "fedora_cloud_init" {
-  name           = "fedora_cloudinit.iso"
-  user_data      = data.template_file.user_data.rendered
+  name      = "fedora_cloudinit.iso"
+  user_data = data.template_file.user_data.rendered
 }
 
 resource "libvirt_network" "schedule_app_network" {
   name = "schedule_app_network"
 
-  mode = "bridge"
+  mode   = "bridge"
   bridge = "virbr0"
 }
 
 resource "libvirt_domain" "schedule_app" {
-  name = "schedule_app"
+  name = var.vm_name
 
   cloudinit = libvirt_cloudinit_disk.fedora_cloud_init.id
 
-  vcpu = 2
+  vcpu = var.vm_vcpu
   cpu {
     mode = "host-passthrough"
   }
 
-  memory = "2048"
+  memory = var.vm_memory
 
   network_interface {
     network_id     = libvirt_network.schedule_app_network.id
@@ -64,8 +52,4 @@ resource "libvirt_domain" "schedule_app" {
   disk {
     volume_id = libvirt_volume.fedora_disk.id
   }
-}
-
-output "vm_ip" {
-  value = libvirt_domain.schedule_app.network_interface[0].addresses[0]
 }
