@@ -1,0 +1,45 @@
+#cloud-config
+yum_repos:
+    docker-ce:
+      name: Docker CE
+      baseurl: https://download.docker.com/linux/fedora/$releasever/$basearch/stable
+      enabled: true
+      gpgcheck: false
+      gpgkey: https://download.docker.com/linux/fedora/gpg
+
+package_update: true
+#package_upgrade: true
+packages:
+  - dnf-plugins-core
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - docker-buildx-plugin
+  - docker-compose-plugin
+
+runcmd:
+  - [ systemctl, daemon-reload ]
+  - [ systemctl, enable, docker ]
+  - [ systemctl, start, docker ]
+
+groups:
+  - admingroup: [root,sys]
+  - cloud-users
+  - docker
+
+users:
+  - default
+  - name: admin
+    groups:
+      - sudo
+      - docker
+      - cloud-users
+    sudo:
+      - ALL=(ALL:ALL) ALL
+    ssh_pwauth: True
+    lock_passwd: false
+    passwd: $6$rounds=4096$jCeHUcpqW1jx5w05$.DPPIvFb3waFuXHNGFef3BS06ksKowe6BlVWBI1yGQGxwJCpeVS7oYTWx.8w7bIBPfYQDgetBQCdCYMwbuzo.0
+
+ssh_deletekeys: false
+
+final_message: "The system is finally up, after $UPTIME seconds"

@@ -12,3 +12,5 @@
 
 *.tfstate
 *.tfstate.*
+
+os_image
