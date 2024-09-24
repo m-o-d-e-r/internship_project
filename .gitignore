@@ -7,3 +7,8 @@
 /schedule_logs
 
 .env
+
+.terraform/
+
+*.tfstate
+*.tfstate.*
