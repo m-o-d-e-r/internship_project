@@ -36,7 +36,8 @@ users:
       - cloud-users
     sudo:
       - ALL=(ALL:ALL) ALL
-    ssh_pwauth: True
+    ssh-authorized-keys:
+     - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKRm9mgCkLrCkH6yjcy1KOzZAXoup3MsPdSD1uKut3v7
     lock_passwd: false
     passwd: $6$rounds=4096$jCeHUcpqW1jx5w05$.DPPIvFb3waFuXHNGFef3BS06ksKowe6BlVWBI1yGQGxwJCpeVS7oYTWx.8w7bIBPfYQDgetBQCdCYMwbuzo.0
 
