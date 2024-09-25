@@ -5,11 +5,6 @@ resource "libvirt_volume" "fedora_iso" {
   format = var.vm_os_image_format
 }
 
-resource "libvirt_volume" "fedora_disk" {
-  name = "fedora_disk"
-  size = "21474836480"
-}
-
 data "template_file" "user_data" {
   template = file("${path.module}/config/cloud_init.yml")
 }
@@ -47,9 +42,5 @@ resource "libvirt_domain" "schedule_app" {
   disk {
     volume_id = libvirt_volume.fedora_iso.id
     scsi      = true
-  }
-
-  disk {
-    volume_id = libvirt_volume.fedora_disk.id
   }
 }
