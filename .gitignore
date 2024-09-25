@@ -7,3 +7,13 @@
 /schedule_logs
 
 .env
+
+.terraform/
+
+*.tfstate
+*.tfstate.*
+
+terraform/*/os_image
+terraform/*/keys
+
+.terraform.lock.hcl
