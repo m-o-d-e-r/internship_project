@@ -1,0 +1,12 @@
+FROM debian
+
+RUN apt update && \
+    apt install -y postgresql-client && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY dump/2024-08-19.dump.sql /dump.sql
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
