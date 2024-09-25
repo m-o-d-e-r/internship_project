@@ -15,3 +15,5 @@
 
 terraform/*/os_image
 terraform/*/keys
+
+.terraform.lock.hcl

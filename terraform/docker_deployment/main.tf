@@ -1,33 +1,55 @@
 
-terraform {
-  required_providers {
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = "3.0.2"
-    }
+resource "docker_image" "schedule_api" {
+  name = "schedule_api"
+
+  build {
+    context = "../../"
+    dockerfile = "Dockerfile.api"
   }
 }
 
-provider "docker" {
-  host = "tcp://${data.terraform_remote_state.vm.outputs.vm_ip}:2375"
-}
+resource "docker_image" "schedule_web" {
+  name = "schedule_web"
 
-data "terraform_remote_state" "vm" {
-  backend = "local"
-  config = {
-    path = "../vm_creation/terraform.tfstate"
+  build {
+    context = "../../"
+    dockerfile = "Dockerfile.web"
   }
 }
 
-resource "docker_image" "nginx" {
-  name = "nginx:latest"
+resource "docker_image" "schedule_nginx" {
+  name = "schedule_nginx"
+
+  build {
+    context = "../../"
+    dockerfile = "Dockerfile.nginx-proxy"
+  }
 }
 
-resource "docker_container" "nginx_container" {
-  image = docker_image.nginx.image_id
-  name  = "my_nginx"
-  ports {
-    internal = 80
-    external = 80
+
+resource "docker_container" "schedule_api" {
+  name = "schedule-api"
+  image = docker_image.schedule_api.image_id
+
+  networks_advanced {
+    name = docker_network.schedule_network.id
+  }
+}
+
+resource "docker_container" "schedule_web" {
+  name =  "schedule-web"
+  image = docker_image.schedule_web.image_id
+
+  networks_advanced {
+    name = docker_network.schedule_network.id
+  }
+}
+
+resource "docker_container" "schedule_nginx" {
+  name = "schedule-nginx"
+  image = docker_image.schedule_nginx.image_id
+
+  networks_advanced {
+    name = docker_network.schedule_network.id
   }
 }

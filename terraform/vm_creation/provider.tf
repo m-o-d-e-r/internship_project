@@ -5,6 +5,10 @@ terraform {
       version = "0.8.0"
     }
   }
+
+  backend "local" {
+    path = "./terraform.tfstate"
+  }
 }
 
 provider "libvirt" {
