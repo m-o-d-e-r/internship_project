@@ -38,6 +38,7 @@ resource "aws_docdb_cluster" "default" {
   engine_version          = "5.0"
   master_username         = "username"
   master_password         = "password"
+  skip_final_snapshot     = true
 }
 
 resource "aws_docdb_cluster_instance" "cluster_instance" {
