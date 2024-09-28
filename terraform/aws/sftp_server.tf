@@ -50,4 +50,8 @@ resource "aws_instance" "sftp" {
 
   user_data_replace_on_change = true
   user_data                   = file("./config/sftp_cloud_init.yaml")
+
+  provisioner "local-exec" {
+    command = "REMOTE_SFTP_IP=${self.public_ip} make sync"
+  }
 }
