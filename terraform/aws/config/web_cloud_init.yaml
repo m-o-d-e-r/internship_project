@@ -1,0 +1,45 @@
+#cloud-config
+
+package_update: true
+
+packages:
+  - nginx
+
+runcmd:
+  - chown -R admin:admin /var/sftp_meta
+  - /var/sftp_meta/download_web_tar.sh
+  - systemctl enable nginx
+  - systemctl start nginx
+
+groups:
+  - admingroup: [root,sys]
+  - cloud-users
+
+users:
+  - default
+  - name: admin
+    groups:
+      - sudo
+      - cloud-users
+    sudo:
+      - ALL=(ALL:ALL) NOPASSWD:ALL
+    ssh-authorized-keys:
+     - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAf6V4g7ahli0x4Z8D3cbC3ZeT5li7p63zldIU0Wcijj
+    lock_passwd: true
+
+write_files:
+  - path: /var/sftp_meta/sftp_ip
+    content: |
+      ${sftp_instance_ip}
+  - path: /var/sftp_meta/sftp_key
+    encoding: base64
+    permissions: '0600'
+    content: |
+      ${sftp_user_private_key}
+  - path: /var/sftp_meta/download_web_tar.sh
+    encoding: base64
+    permissions: '0700'
+    content: |
+      ${download_web_tar}
+
+ssh_deletekeys: false

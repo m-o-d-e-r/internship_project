@@ -1,0 +1,61 @@
+
+resource "aws_key_pair" "web_key_pair" {
+  provider = aws.eu-north-1
+
+  key_name   = "web_instance_key"
+  public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAf6V4g7ahli0x4Z8D3cbC3ZeT5li7p63zldIU0Wcijj"
+}
+
+
+resource "aws_subnet" "web_subnet" {
+  provider = aws.eu-north-1
+
+  vpc_id     = aws_vpc.schedule_vpc.id
+  cidr_block = "192.168.100.0/24"
+
+  tags = {
+    Name = "web-subnet"
+  }
+}
+
+
+resource "aws_route_table_association" "web_public_route_association" {
+  subnet_id      = aws_subnet.web_subnet.id
+  route_table_id = aws_route_table.public_route_table.id
+}
+
+
+resource "aws_instance" "web" {
+  provider = aws.eu-north-1
+
+  ami           = "ami-0129bfde49ddb0ed6" # Amazon Linux
+  instance_type = "t3.micro"
+
+  key_name = aws_key_pair.web_key_pair.key_name
+
+  associate_public_ip_address = true
+  subnet_id                   = aws_subnet.web_subnet.id
+  vpc_security_group_ids = [
+    aws_security_group.schedule_security_group.id
+  ]
+
+  root_block_device {
+    volume_size = "8"
+    volume_type = "gp3"
+  }
+
+  tags = {
+    Name = "web"
+  }
+
+  user_data_replace_on_change = true
+  user_data = templatefile("./config/web_cloud_init.yaml", {
+    sftp_instance_ip      = aws_instance.sftp.private_ip,
+    sftp_user_private_key = base64encode(file("./keys/id_ed25519"))
+    download_web_tar      = base64encode(file("./scripts/download_web_tar.sh"))
+  })
+
+  depends_on = [
+    aws_instance.sftp
+  ]
+}

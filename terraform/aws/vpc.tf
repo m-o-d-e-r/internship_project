@@ -28,7 +28,7 @@ resource "aws_route_table" "public_route_table" {
   }
 
   tags = {
-    Name = "public-route-table"
+    Name = "schedule-route-table"
   }
 }
 
@@ -50,10 +50,20 @@ resource "aws_security_group_rule" "ingress_ssh" {
 }
 
 
-resource "aws_security_group_rule" "ingress_http" {
+resource "aws_security_group_rule" "ingress_http_api" {
   type              = "ingress"
   from_port         = 8080
   to_port           = 8080
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.schedule_security_group.id
+}
+
+
+resource "aws_security_group_rule" "ingress_http" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.schedule_security_group.id
