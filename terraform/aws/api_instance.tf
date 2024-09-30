@@ -1,15 +1,11 @@
 
 resource "aws_key_pair" "api_key_pair" {
-  provider = aws.eu-north-1
-
   key_name   = "api_instance_key"
   public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAf6V4g7ahli0x4Z8D3cbC3ZeT5li7p63zldIU0Wcijj"
 }
 
 
 resource "aws_subnet" "api_subnet" {
-  provider = aws.eu-north-1
-
   vpc_id     = aws_vpc.schedule_vpc.id
   cidr_block = "192.168.200.0/24"
 
@@ -26,17 +22,16 @@ resource "aws_route_table_association" "api_public_route_association" {
 
 
 resource "aws_instance" "api" {
-  provider = aws.eu-north-1
-
-  ami           = "ami-0129bfde49ddb0ed6" # Amazon Linux
-  instance_type = "t3.micro"
+  ami           = "ami-0b45ae66668865cd6" # Amazon Linux
+  instance_type = "t2.micro"
 
   key_name = aws_key_pair.api_key_pair.key_name
 
   associate_public_ip_address = true
   subnet_id                   = aws_subnet.api_subnet.id
   vpc_security_group_ids = [
-    aws_security_group.schedule_security_group.id
+    aws_security_group.schedule_security_group.id,
+    aws_security_group.dbs_security_group.id
   ]
 
   root_block_device {
@@ -53,9 +48,17 @@ resource "aws_instance" "api" {
     sftp_instance_ip      = aws_instance.sftp.private_ip,
     sftp_user_private_key = base64encode(file("./keys/id_ed25519"))
     download_api_tar      = base64encode(file("./scripts/download_api_tar.sh"))
+    update_hosts          = base64encode(file("./scripts/update_hosts.sh"))
+    db_address            = aws_db_instance.postgres.address
+    redis_address         = aws_elasticache_cluster.redis.cache_nodes[0].address
+#    mongo_address         = aws_docdb_cluster_instance.mongo_cluster_instance.endpoint
+    restore_db_script     = base64encode(file("./scripts/restore_db.sh"))
   })
 
   depends_on = [
-    aws_instance.sftp
+    aws_instance.sftp,
+    aws_db_instance.postgres,
+    aws_elasticache_cluster.redis,
+#    aws_docdb_cluster_instance.mongo_cluster_instance
   ]
 }
