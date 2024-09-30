@@ -6,8 +6,8 @@ packages:
   - nginx
 
 runcmd:
-  - chown -R admin:admin /var/sftp_meta
-  - /var/sftp_meta/download_web_tar.sh
+  - chown -R admin:admin /var/schedule_meta
+  - /var/schedule_meta/download_web_tar.sh
   - systemctl enable nginx
   - systemctl start nginx
 
@@ -28,15 +28,15 @@ users:
     lock_passwd: true
 
 write_files:
-  - path: /var/sftp_meta/sftp_ip
+  - path: /var/schedule_meta/sftp_ip
     content: |
       ${sftp_instance_ip}
-  - path: /var/sftp_meta/sftp_key
+  - path: /var/schedule_meta/sftp_key
     encoding: base64
     permissions: '0600'
     content: |
       ${sftp_user_private_key}
-  - path: /var/sftp_meta/download_web_tar.sh
+  - path: /var/schedule_meta/download_web_tar.sh
     encoding: base64
     permissions: '0700'
     content: |

@@ -1,19 +1,33 @@
 #cloud-config
 
+yum_repos:
+  mongodb-org-7.0:
+    name: MongoDB Repository
+    baseurl: https://repo.mongodb.org/yum/amazon/2023/mongodb-org/7.0/x86_64/
+    gpgcheck: 1
+    enabled: 1
+    gpgkey: https://pgp.mongodb.com/server-7.0.asc
+
 package_update: true
 
 packages:
   - java-11-amazon-corretto-headless
   - java-11-amazon-corretto-devel
   - tomcat9
+  - mongodb-mongosh-shared-openssl3
+  - mongodb-org-database
+  - mongodb-org-server
+  - postgresql15
 
 runcmd:
-#  - curl -s "https://get.sdkman.io" | bash && source "$HOME/.sdkman/bin/sdkman-init.sh"
-#  - sdk install gradle 7.2
-  - chown -R admin:admin /var/sftp_meta
-  - /var/sftp_meta/download_api_tar.sh
+  - chown -R admin:admin /var/schedule_meta
+  - /var/schedule_meta/update_hosts.sh ${db_address}=schedule-db ${redis_address}=schedule-redis 127.0.0.1=schedule-mongo
+  - /var/schedule_meta/download_api_tar.sh
   - systemctl enable tomcat9
   - systemctl start tomcat9
+  - systemctl enable mongod
+  - systemctl start mongod
+  - DB_HOST=schedule-db PGPASSWORD=password /var/schedule_meta/restore_db.sh
 
 groups:
   - admingroup: [root,sys]
@@ -32,18 +46,29 @@ users:
     lock_passwd: true
 
 write_files:
-  - path: /var/sftp_meta/sftp_ip
+  - path: /var/schedule_meta/sftp_ip
     content: |
       ${sftp_instance_ip}
-  - path: /var/sftp_meta/sftp_key
+  - path: /var/schedule_meta/sftp_key
     encoding: base64
     permissions: '0600'
     content: |
       ${sftp_user_private_key}
-  - path: /var/sftp_meta/download_api_tar.sh
+  - path: /var/schedule_meta/download_api_tar.sh
     encoding: base64
     permissions: '0700'
     content: |
       ${download_api_tar}
+  - path: /var/schedule_meta/update_hosts.sh
+    encoding: base64
+    permissions: '0700'
+    content: |
+      ${update_hosts}
+  - path: /var/schedule_meta/restore_db.sh
+    encoding: base64
+    permissions: '0700'
+    content: |
+      ${restore_db_script}
+
 
 ssh_deletekeys: false
