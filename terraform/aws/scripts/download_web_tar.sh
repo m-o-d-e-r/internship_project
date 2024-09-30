@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SFTP_USER=user
-SFTP_INSTANCE_IP=`cat /var/sftp_meta/sftp_ip`
+SFTP_INSTANCE_IP=`cat /var/schedule_meta/sftp_ip`
 WEB_ARCHIVE_NAME=web.tar
 TARGET_TAR_PATH=/usr/share/nginx/html
 
@@ -10,7 +10,7 @@ echo "Connecting to $SFTP_INSTANCE_IP"
 
 ssh-keyscan -H $SFTP_INSTANCE_IP >> ~/.ssh/known_hosts
 
-sftp -i /var/sftp_meta/sftp_key $SFTP_USER@$SFTP_INSTANCE_IP << EOF > /dev/null
+sftp -i /var/schedule_meta/sftp_key $SFTP_USER@$SFTP_INSTANCE_IP << EOF > /dev/null
 cd data
 get $WEB_ARCHIVE_NAME
 EOF
