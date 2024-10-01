@@ -1,0 +1,16 @@
+---
+
+- name: Installing Python3
+  hosts: aws_ec2
+  remote_user: ec2-user
+  become: true
+
+  tasks:
+    - name: Ensure Python and pip is installing
+      ansible.builtin.yum:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - python3
+        - python3-pip
+
