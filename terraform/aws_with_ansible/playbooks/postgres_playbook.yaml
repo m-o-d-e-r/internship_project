@@ -1,0 +1,109 @@
+---
+
+- name: Configure PostgresSQL
+  hosts: instances_schedule_dbs
+  remote_user: ec2-user
+  become: true
+  vars_files:
+    - dbs.yaml
+
+  tasks:
+    - name: Create user for indent connection
+      user:
+        name: super_mega_user
+        password: !
+        state: present
+        createhome: yes
+
+    - name: Ensure postgresql is at the latest version
+      ansible.builtin.yum:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - postgresql15-server
+
+    - name: Install Python packages
+      pip:
+        name: "{{ item }}"
+      with_items:
+        - psycopg2-binary
+
+    - name: Find out if PostgreSQL is initialized
+      ansible.builtin.stat:
+        path: /var/lib/pgsql/data/pg_hba.conf
+      register: postgres_data
+
+    - name: Initialize PostgreSQL
+      shell: postgresql-setup initdb
+      when: not postgres_data.stat.exists
+
+    - name: Ensure that postgresql is started
+      ansible.builtin.service:
+        name: postgresql
+        state: started
+        enabled: true
+
+    - name: Update PostgreSQL to listen on all interfaces
+      lineinfile:
+        path: /var/lib/pgsql/data/postgresql.conf
+        regexp: '^#?listen_addresses'
+        line: "listen_addresses = '*'"
+        state: present
+      notify: restart postgres
+
+    - name: Allow PostgreSQL external access in pg_hba.conf
+      lineinfile:
+        path: /var/lib/pgsql/data/pg_hba.conf
+        line: 'host all all 0.0.0.0/0 md5'
+        state: present
+      notify: restart postgres
+
+    - name: Create database
+      postgresql_db:
+        state: present
+        name: "{{ pg_database }}"
+      become: true
+      become_user: postgres
+
+    - name: Copy SQL file to remote server
+      copy:
+        src: dump.sql
+        dest: /etc/dump.sql
+
+    - name: Execute SQL script
+      shell: |
+        psql -d {{ pg_database }} -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+        psql --set ON_ERROR_STOP=off -d {{ pg_database }} -f /etc/dump.sql
+      become_user: postgres
+
+    - name: Create db user
+      postgresql_user:
+        state: present
+        name: "{{ pg_user }}"
+        password: "{{ pg_password }}"
+      become_user: postgres
+
+    - name: Grant db user access to app db
+      postgresql_privs:
+        type: database
+        database: "{{ pg_database }}"
+        roles: "{{ pg_user }}"
+        privs: CONNECT
+        grant_option: true
+      become_user: postgres
+
+    - name: Grant all privileges on tables in app db
+      postgresql_privs:
+        type: table
+        objs: ALL_IN_SCHEMA
+        database: "{{ pg_database }}"
+        roles: "{{ pg_user }}"
+        privs: ALL
+        grant_option: true
+      become_user: postgres
+
+  handlers:
+    - name: restart postgres
+      service:
+        name: postgresql
+        state: restarted
