@@ -1,0 +1,3 @@
+pg_database: schedule
+pg_user: super_mega_user
+pg_password: password
