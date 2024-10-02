@@ -1,0 +1,23 @@
+---
+
+- name: Install packages
+  ansible.builtin.yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - java-11-amazon-corretto-headless
+    - java-11-amazon-corretto-devel
+    - tomcat9
+
+- name: Ensure that tomcat9 is started
+  ansible.builtin.service:
+    name: tomcat9
+    state: started
+    enabled: true
+
+- name: Copy WAR file
+  ansible.builtin.copy:
+    src: class_schedule.war
+    dest: /usr/share/tomcat9/webapps/class_schedule.war
+    mode: '0644'
+  notify: restart tomcat9
