@@ -1,0 +1,16 @@
+---
+
+- name: restart mongod
+  service:
+    name: mongod
+    state: restarted
+
+- name: restart postgres
+  service:
+    name: postgresql
+    state: restarted
+
+- name: restart redis
+  service:
+    name: redis6
+    state: restarted
