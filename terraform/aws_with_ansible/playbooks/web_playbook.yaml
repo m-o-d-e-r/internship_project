@@ -5,25 +5,5 @@
   remote_user: ec2-user
   become: true
 
-  tasks:
-    - name: Install packages
-      ansible.builtin.yum:
-        name: "{{ item }}"
-        state: present
-      with_items:
-        - nginx
-
-    - name: Ensure that nginx is started
-      ansible.builtin.service:
-        name: nginx
-        state: started
-        enabled: true
-
-    - name: Remove default site
-      ansible.builtin.command: rm -rf /usr/share/nginx/html/*
-
-    - name: Extract web app from TAR file
-      ansible.builtin.unarchive:
-        src: web.tar
-        dest: /usr/share/nginx/html/
-        extra_opts: ['--strip-components=1']
+  roles:
+    - web_instance
