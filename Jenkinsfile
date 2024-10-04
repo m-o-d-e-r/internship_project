@@ -29,7 +29,10 @@ pipeline {
         stage('Build API Image') {
             steps {
                 script {
-                    apiImage = docker.build("${env.imagenamePrefix}/scheduler_api:${env.GIT_BRANCH}", "-f ./Dockerfile.api .")
+                    apiImage = docker.build(
+                        "${env.imagenamePrefix}/scheduler_api:${env.GIT_BRANCH}",
+                        "-f ./Dockerfile.api ."
+                    )
                 }
             }
         }
@@ -51,7 +54,7 @@ pipeline {
                 script {
                     docker.withRegistry('', env.registryCredential) {
                         apiImage.push("${env.GIT_BRANCH}")
-//                        webImage.push("${env.GIT_BRANCH}")
+                        webImage.push("${env.GIT_BRANCH}")
                     }
                 }
             }
@@ -63,8 +66,8 @@ pipeline {
                     echo "Running API container..."
                     sh "docker run --rm -d --name api-container ${env.imagenamePrefix}/scheduler_api:${env.GIT_BRANCH}"
 
-//                    echo "Running web container..."
-//                    sh "docker run --rm -d --name web-container ${env.imagenamePrefix}/scheduler_web:${env.GIT_BRANCH}"
+                    echo "Running web container..."
+                    sh "docker run --rm -d --name web-container ${env.imagenamePrefix}/scheduler_web:${env.GIT_BRANCH}"
                 }
             }
         }
@@ -75,8 +78,8 @@ pipeline {
                     echo "Extracting artifacts from API container..."
                     sh "docker cp api-container:/usr/local/tomcat/webapps/class_schedule.war ${env.artifactsDestFolder}/api-artifact"
 
-//                    echo "Extracting artifacts from Web container..."
-//                    sh "docker cp web-container:/usr/share/nginx/html ${env.artifactsDestFolder}/web-artifact"
+                    echo "Extracting artifacts from Web container..."
+                    sh "docker cp web-container:/usr/share/nginx/html ${env.artifactsDestFolder}/web-artifact"
 
                     sh "ls -lh ${env.artifactsDestFolder}"
                 }
@@ -97,6 +100,14 @@ pipeline {
                         ansible-playbook playbooks/api_playbook.yaml  -i inventory/aws_ec2.yaml
                         #ansible-playbook playbooks/web_playbook.yaml  -i inventory/aws_ec2.yaml
                     """
+                }
+            }
+        }
+
+        stage('Get user input') {
+            steps {
+                script {
+                    input message: 'Do you want to continue?', ok: 'Yes'
                 }
             }
         }
