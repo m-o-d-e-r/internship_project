@@ -53,7 +53,11 @@ pipeline {
             steps {
                 script {
                     echo "Running API container..."
-                    sh 'docker run --rm -d --name api-container ${imagenamePrefix}/scheduler_api:${env.GIT_BRANCH}'
+                    sh """
+                        echo ${imagenamePrefix}
+                        echo ${env.GIT_BRANCH}
+                        docker run --rm -d --name api-container ${imagenamePrefix}/scheduler_api:${env.GIT_BRANCH}
+                    """
 
 //                    echo "Running Web container..."
 //                    sh 'docker run --rm -d --name web-container ${imagenamePrefix}/scheduler_web:${env.GIT_BRANCH}'
@@ -65,12 +69,12 @@ pipeline {
             steps {
                 script {
                     echo "Extracting artifacts from API container..."
-                    sh 'docker cp api-container:/usr/local/tomcat/webapps/class_schedule.war ./api-artifacts'
+                    sh "docker cp api-container:/usr/local/tomcat/webapps/class_schedule.war ./api-artifacts"
 
 //                    echo "Extracting artifacts from Web container..."
 //                    sh 'docker cp web-container:/path/to/artifacts ./web-artifacts'
 
-                    sh 'ls -lhR'
+                    sh "ls -lhR"
 //                    archiveArtifacts artifacts: 'api-artifacts/**, web-artifacts/**', allowEmptyArchive: true
                 }
             }
