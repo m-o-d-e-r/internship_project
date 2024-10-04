@@ -77,8 +77,8 @@ pipeline {
                     echo "Extracting artifacts from API container..."
                     sh "docker cp api-container:/usr/local/tomcat/webapps/class_schedule.war ${env.artifactsDestFolder}/api-artifact"
 
-                    echo "Extracting artifacts from Web container..."
-                    sh "docker cp web-container:/usr/share/nginx/html ${env.artifactsDestFolder}/web-artifact"
+//                    echo "Extracting artifacts from Web container..."
+//                    sh "docker cp web-container:/usr/share/nginx/html ${env.artifactsDestFolder}/web-artifact"
 
                     sh "ls -lh ${env.artifactsDestFolder}"
                 }
