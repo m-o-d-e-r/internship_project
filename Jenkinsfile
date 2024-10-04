@@ -65,8 +65,8 @@ pipeline {
                     echo "Running API container..."
                     sh "docker run --rm -d --name api-container ${env.imagenamePrefix}/scheduler_api:${env.GIT_BRANCH}"
 
-                    echo "Running web container..."
-                    sh "docker run --rm -d --name web-container ${env.imagenamePrefix}/scheduler_web:${env.GIT_BRANCH}"
+//                    echo "Running web container..."
+//                    sh "docker run --rm -d --name web-container ${env.imagenamePrefix}/scheduler_web:${env.GIT_BRANCH}"
                 }
             }
         }
@@ -108,7 +108,7 @@ pipeline {
         always {
             script {
                 sh 'docker stop api-container || true'
-//                sh 'docker stop web-container || true'
+                sh 'docker stop web-container || true'
 
 
                 def userResponse = input message: 'Do you want to destroy the infrastructure?', ok: 'Yes, destroy', parameters: [
