@@ -13,12 +13,15 @@ pipeline {
         stage('Launch infrastructure') {
             steps {
                 script {
-                    sh 'terraform init'
-                    sh 'terraform apply -auto-approve'
+                    sh """
+                        cd terraform/aws_with_ansible
+                        terraform init
+                        terraform apply -auto-approve
+                    """
                 }
 
                 script {
-                    env.apiHost = sh(script: 'terraform output -raw schedule_api', returnStdout: true).trim()
+                    env.apiHost = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_api', returnStdout: true).trim()
                 }
             }
         }
@@ -81,7 +84,10 @@ pipeline {
                 script {
                     echo 'Running Ansible playbooks...'
                     sh """
+                        cd terraform/aws_with_ansible
+
                         export ANSIBLE_HOST_KEY_CHECKING=False
+
                         ansible-playbook playbooks/python_playbook.yaml  -i inventory/aws_ec2.yaml
                         ansible-playbook playbooks/dbs_playbook.yaml  -i inventory/aws_ec2.yaml
                         ansible-playbook playbooks/api_playbook.yaml  -i inventory/aws_ec2.yaml
@@ -95,7 +101,10 @@ pipeline {
             steps {
                 script {
                     echo 'Destroying infrastructure...'
-                    sh 'terraform destroy'
+                    sh """
+                        cd terraform/aws_with_ansible
+                        terraform destroy
+                    """
                 }
             }
         }
