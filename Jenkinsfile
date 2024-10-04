@@ -96,18 +96,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Destroy Infrastructure') {
-            steps {
-                script {
-                    echo 'Destroying infrastructure...'
-                    sh """
-                        cd terraform/aws_with_ansible
-                        terraform destroy
-                    """
-                }
-            }
-        }
     }
 
     post {
@@ -115,6 +103,12 @@ pipeline {
             script {
                 sh 'docker stop api-container || true'
                 sh 'docker stop web-container || true'
+
+                echo 'Destroying infrastructure...'
+                sh """
+                    cd terraform/aws_with_ansible
+                    terraform destroy
+                """
 
                 cleanWs()
             }
