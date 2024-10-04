@@ -104,11 +104,20 @@ pipeline {
                 sh 'docker stop api-container || true'
                 sh 'docker stop web-container || true'
 
-                echo 'Destroying infrastructure...'
-                sh """
-                    cd terraform/aws_with_ansible
-                    terraform destroy
-                """
+
+                def userResponse = input message: 'Do you want to destroy the infrastructure?', ok: 'Yes, destroy', parameters: [
+                    booleanParam(defaultValue: true, description: 'Check to confirm destruction', name: 'confirmDestroy')
+                ]
+
+                if (userResponse.confirmDestroy) {
+                    echo 'Destroying infrastructure...'
+                    sh """
+                        cd terraform/aws_with_ansible
+                        terraform destroy -auto-approve
+                    """
+                } else {
+                    echo 'Skipping infrastructure destruction.'
+                }
 
                 cleanWs()
             }
