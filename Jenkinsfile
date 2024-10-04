@@ -37,7 +37,13 @@ pipeline {
         stage('Build Web Image') {
             steps {
                 script {
-                    webImage = docker.build("${env.imagenamePrefix}/scheduler_web:${env.GIT_BRANCH}", "--build-arg API_BASE_URL=http://${env.apiHost}:${env.apiPort}/class_schedule", "-f ./Dockerfile.web .")
+                    def imageTag = "${env.imagenamePrefix}/scheduler_web:${env.GIT_BRANCH}"
+
+                    webImage = docker.build(imageTag, [
+                        "--build-arg API_BASE_URL=http://${env.apiHost}:${env.apiPort}/class_schedule",
+                        "-f ./Dockerfile.web",
+                        "."
+                    ])
                 }
             }
         }
