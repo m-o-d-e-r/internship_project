@@ -17,7 +17,7 @@
 
 - name: Copy WAR file
   ansible.builtin.copy:
-    src: class_schedule.war
+    src: api-artifact
     dest: /usr/share/tomcat9/webapps/class_schedule.war
     mode: '0644'
   notify: restart tomcat9

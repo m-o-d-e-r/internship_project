@@ -15,9 +15,13 @@
 
 - name: Remove default site
   ansible.builtin.command: rm -rf /usr/share/nginx/html/*
+  become: true
 
-- name: Extract web app from TAR file
-  ansible.builtin.unarchive:
-    src: web.tar
+- name: Copy contents of web-artifact to Nginx html directory
+  ansible.builtin.copy:
+    src: web-artifact/
     dest: /usr/share/nginx/html/
-    extra_opts: ['--strip-components=1']
+    mode: '0644'
+    directory_mode: '0755'
+    remote_src: no
+  notify: restart nginx
