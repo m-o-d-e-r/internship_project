@@ -95,10 +95,10 @@ pipeline {
 
                         export ANSIBLE_HOST_KEY_CHECKING=False
 
-                        ansible-playbook playbooks/python_playbook.yaml  -i inventory/aws_ec2.yaml
-                        ansible-playbook playbooks/dbs_playbook.yaml  -i inventory/aws_ec2.yaml
-                        ansible-playbook playbooks/api_playbook.yaml  -i inventory/aws_ec2.yaml
-                        #ansible-playbook playbooks/web_playbook.yaml  -i inventory/aws_ec2.yaml
+                        ansible-playbook playbooks/python_playbook.yaml -i inventory/aws_ec2.yaml
+                        ansible-playbook playbooks/dbs_playbook.yaml -i inventory/aws_ec2.yaml
+                        ansible-playbook playbooks/api_playbook.yaml -i inventory/aws_ec2.yaml
+                        ansible-playbook playbooks/web_playbook.yaml -i inventory/aws_ec2.yaml
                     """
                 }
             }
