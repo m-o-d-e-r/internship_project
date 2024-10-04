@@ -2,7 +2,9 @@
 
 - name: Installing Python3
   hosts: aws_ec2
-  remote_user: ec2-user
+  vars_files: 
+    - common.yaml
+  remote_user: "{{ remote_user }}"
   become: true
 
   tasks:

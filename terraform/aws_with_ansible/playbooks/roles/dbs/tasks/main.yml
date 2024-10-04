@@ -1,5 +1,0 @@
----
-
-- include_tasks: mongo_playbook.yaml
-- include_tasks: postgres_playbook.yaml
-- include_tasks: redis_playbook.yaml

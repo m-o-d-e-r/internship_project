@@ -2,7 +2,9 @@
 
 - name: Configure API
   hosts: instances_schedule_api
-  remote_user: ec2-user
+  vars_files: 
+    - common.yaml
+  remote_user: "{{ remote_user }}"
   become: true
 
   roles:
