@@ -34,26 +34,26 @@ pipeline {
             }
         }
 
-        stage('Build Web Image') {
-            steps {
-                script {
-                    def imageTag = "${env.imagenamePrefix}/scheduler_web:${env.GIT_BRANCH}"
-
-                    webImage = docker.build(imageTag, [
-                        "--build-arg API_BASE_URL=http://${env.apiHost}:${env.apiPort}/class_schedule",
-                        "-f ./Dockerfile.web",
-                        "."
-                    ])
-                }
-            }
-        }
+//        stage('Build Web Image') {
+//            steps {
+//                script {
+//                    def imageTag = "${env.imagenamePrefix}/scheduler_web:${env.GIT_BRANCH}"
+//
+//                    webImage = docker.build(imageTag, [
+//                        "--build-arg API_BASE_URL=http://${env.apiHost}:${env.apiPort}/class_schedule",
+//                        "-f ./Dockerfile.web",
+//                        "."
+//                    ])
+//                }
+//            }
+//        }
 
         stage('Push Images to Registry') {
             steps {
                 script {
                     docker.withRegistry('', env.registryCredential) {
                         apiImage.push("${env.GIT_BRANCH}")
-                        webImage.push("${env.GIT_BRANCH}")
+//                        webImage.push("${env.GIT_BRANCH}")
                     }
                 }
             }
@@ -97,7 +97,7 @@ pipeline {
                         ansible-playbook playbooks/python_playbook.yaml  -i inventory/aws_ec2.yaml
                         ansible-playbook playbooks/dbs_playbook.yaml  -i inventory/aws_ec2.yaml
                         ansible-playbook playbooks/api_playbook.yaml  -i inventory/aws_ec2.yaml
-                        ansible-playbook playbooks/web_playbook.yaml  -i inventory/aws_ec2.yaml
+                        #ansible-playbook playbooks/web_playbook.yaml  -i inventory/aws_ec2.yaml
                     """
                 }
             }
@@ -108,7 +108,7 @@ pipeline {
         always {
             script {
                 sh 'docker stop api-container || true'
-                sh 'docker stop web-container || true'
+//                sh 'docker stop web-container || true'
 
 
                 def userResponse = input message: 'Do you want to destroy the infrastructure?', ok: 'Yes, destroy', parameters: [
