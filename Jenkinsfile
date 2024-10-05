@@ -24,12 +24,12 @@ pipeline {
                 }
 
                 script {
-                    try {
-                        env.apiHost = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_api', returnStdout: true).trim()
-                        echo "API host received ${env.apiHost}"
-                    } catch (Exception e) {
-                        echo "Failed to retrieve API host: ${e}"
-                    }
+                    def apiHostOutput = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_api', returnStdout: true).trim()
+                    def apiHostOutput1 = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_api', returnStdout: true)
+                    echo "${apiHostOutput}"
+                    echo "${apiHostOutput1}"
+                    env.apiHost = apiHostOutput
+
 //                    env.apiHost = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_api', returnStdout: true).trim()
 //                    echo "API host received ${env.apiHost}"
 
