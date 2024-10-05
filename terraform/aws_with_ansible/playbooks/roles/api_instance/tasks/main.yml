@@ -21,3 +21,18 @@
     dest: /usr/share/tomcat9/webapps/class_schedule.war
     mode: '0644'
   notify: restart tomcat9
+
+- name: Ensure {{ scripts_home_dir }} dir exists
+  ansible.builtin.file:
+    path: "{{ scripts_home_dir }}"
+    state: directory
+
+- name: Copy script to update /etc/hosts file
+  ansible.builtin.copy:
+    src: update_hosts.sh
+    dest: "{{ scripts_home_dir }}/update_hosts.sh"
+    mode: '0744'
+
+- name: Run update_hosts.sh script if /etc/hosts does not contain the necessary data
+  ansible.builtin.shell: "/var/api_scripts/update_hosts.sh {{ update_hosts_arg }}"
+  when: true

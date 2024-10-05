@@ -1,2 +1,3 @@
 ---
-# vars file for api_instance
+
+scripts_home_dir: /var/api_scripts
