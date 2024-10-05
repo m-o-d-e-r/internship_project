@@ -18,12 +18,20 @@ pipeline {
                         cd terraform/aws_with_ansible
                         terraform init
                         terraform apply -auto-approve
+                        terraform output -raw schedule_api
+                        terraform output -raw schedule_dbs
                     """
                 }
 
                 script {
-                    env.apiHost = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_api', returnStdout: true).trim()
-                    echo "API host received ${env.apiHost}"
+                    try {
+                        env.apiHost = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_api', returnStdout: true).trim()
+                        echo "API host received ${env.apiHost}"
+                    } catch (Exception e) {
+                        echo "Failed to retrieve API host: ${e}"
+                    }
+//                    env.apiHost = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_api', returnStdout: true).trim()
+//                    echo "API host received ${env.apiHost}"
 
                     env.dbsHost = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_dbs', returnStdout: true).trim()
                     echo "DBs host received ${env.dbsHost}"
