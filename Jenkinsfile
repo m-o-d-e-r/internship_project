@@ -3,8 +3,6 @@ pipeline {
         imagenamePrefix = "luckymode"
         registryCredential = 'dockerhub-cred'
         artifactsDestFolder = "./terraform/aws_with_ansible/playbooks/files"
-        dbsHost = "localhost"
-        apiHost = "localhost"
         apiPort = 8080
     }
 
@@ -21,20 +19,6 @@ pipeline {
                         terraform output -raw schedule_api
                         terraform output -raw schedule_dbs
                     """
-                }
-
-                script {
-                    def apiHostOutput = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_api', returnStdout: true).trim()
-                    def apiHostOutput1 = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_api', returnStdout: true)
-                    echo "${apiHostOutput}"
-                    echo "${apiHostOutput1}"
-                    env.apiHost = apiHostOutput
-
-//                    env.apiHost = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_api', returnStdout: true).trim()
-//                    echo "API host received ${env.apiHost}"
-
-                    env.dbsHost = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_dbs', returnStdout: true).trim()
-                    echo "DBs host received ${env.dbsHost}"
                 }
             }
         }
@@ -53,9 +37,13 @@ pipeline {
         stage('Build Web Image') {
             steps {
                 script {
+                    def apiHost = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_api', returnStdout: true).trim()
+
+                    echo "API_BASE_URL will be set to ${apiHost}"
+
                     webImage = docker.build(
                         "${env.imagenamePrefix}/scheduler_web:${env.GIT_BRANCH}",
-                        "--build-arg API_BASE_URL=http://${env.apiHost}:${env.apiPort}/class_schedule -f ./Dockerfile.web ."
+                        "--build-arg API_BASE_URL=http://${apiHost}:${env.apiPort}/class_schedule -f ./Dockerfile.web ."
                     )
                 }
             }
@@ -100,6 +88,9 @@ pipeline {
             steps {
                 script {
                     echo 'Running Ansible playbooks...'
+
+                    def dbsHost = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_dbs', returnStdout: true).trim()
+
                     sh """
                         cd terraform/aws_with_ansible
 
@@ -107,7 +98,7 @@ pipeline {
 
                         ansible-playbook playbooks/python_playbook.yaml -i inventory/aws_ec2.yaml
                         ansible-playbook playbooks/dbs_playbook.yaml -i inventory/aws_ec2.yaml
-                        ansible-playbook playbooks/api_playbook.yaml -i inventory/aws_ec2.yaml -e "update_hosts_arg='${env.dbsHost}=schedule-db ${env.dbsHost}=schedule-mongo ${env.dbsHost}=schedule-redis'"
+                        ansible-playbook playbooks/api_playbook.yaml -i inventory/aws_ec2.yaml -e "update_hosts_arg='${dbsHost}=schedule-db ${dbsHost}=schedule-mongo ${dbsHost}=schedule-redis'"
                         ansible-playbook playbooks/web_playbook.yaml -i inventory/aws_ec2.yaml
                     """
                 }
