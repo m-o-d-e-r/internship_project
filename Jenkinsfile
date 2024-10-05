@@ -3,6 +3,7 @@ pipeline {
         imagenamePrefix = "luckymode"
         registryCredential = 'dockerhub-cred'
         artifactsDestFolder = "./terraform/aws_with_ansible/playbooks/files"
+        dbsHost = "localhost"
         apiHost = "localhost"
         apiPort = 8080
     }
@@ -22,6 +23,10 @@ pipeline {
 
                 script {
                     env.apiHost = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_api', returnStdout: true).trim()
+                    echo "API host received ${env.apiHost}"
+
+                    env.dbsHost = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_dbs', returnStdout: true).trim()
+                    echo "DBs host received ${env.dbsHost}"
                 }
             }
         }
@@ -47,7 +52,6 @@ pipeline {
                 }
             }
         }
-
 
         stage('Push Images to Registry') {
             steps {
@@ -80,8 +84,6 @@ pipeline {
 
                     echo "Extracting artifacts from Web container..."
                     sh "docker cp web-container:/usr/share/nginx/html ${env.artifactsDestFolder}/web-artifact"
-
-                    sh "ls -lh ${env.artifactsDestFolder}"
                 }
             }
         }
@@ -97,7 +99,7 @@ pipeline {
 
                         ansible-playbook playbooks/python_playbook.yaml -i inventory/aws_ec2.yaml
                         ansible-playbook playbooks/dbs_playbook.yaml -i inventory/aws_ec2.yaml
-                        ansible-playbook playbooks/api_playbook.yaml -i inventory/aws_ec2.yaml
+                        ansible-playbook playbooks/api_playbook.yaml -i inventory/aws_ec2.yaml -e "update_hosts_arg='${env.dbsHost}=schedule-db ${env.dbsHost}=schedule-mongo ${env.dbsHost}=schedule-redis'"
                         ansible-playbook playbooks/web_playbook.yaml -i inventory/aws_ec2.yaml
                     """
                 }
