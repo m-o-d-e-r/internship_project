@@ -1,0 +1,11 @@
+---
+
+- name: Configure web
+  hosts: instances_schedule_web
+  vars_files: 
+    - common.yaml
+  remote_user: "{{ remote_user }}"
+  become: true
+
+  roles:
+    - web_instance

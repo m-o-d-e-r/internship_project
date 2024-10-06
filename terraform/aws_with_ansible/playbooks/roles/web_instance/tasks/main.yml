@@ -1,0 +1,27 @@
+---
+
+- name: Install packages
+  ansible.builtin.yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - nginx
+
+- name: Ensure that nginx is started
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
+
+- name: Remove default site
+  ansible.builtin.command: rm -rf /usr/share/nginx/html/*
+  become: true
+
+- name: Copy contents of web-artifact to Nginx html directory
+  ansible.builtin.copy:
+    src: web-artifact/
+    dest: /usr/share/nginx/html/
+    mode: '0644'
+    directory_mode: '0755'
+    remote_src: no
+  notify: restart nginx
