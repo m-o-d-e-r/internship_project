@@ -10,3 +10,7 @@ output "schedule_api" {
 output "schedule_dbs" {
   value = module.schedule_dbs.instance_public_dns
 }
+
+output "schedule_prometheus" {
+  value = module.schedule_prometheus.instance_public_dns
+}

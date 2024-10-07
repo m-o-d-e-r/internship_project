@@ -78,3 +78,14 @@ resource "aws_subnet" "dbs_subnet" {
     Name = "dbs-subnet"
   }
 }
+
+
+resource "aws_subnet" "monitoring_subnet" {
+  vpc_id = aws_default_vpc.default.id
+
+  cidr_block = "172.31.30.0/24"
+
+  tags = {
+    Name = "monitoring-subnet"
+  }
+}

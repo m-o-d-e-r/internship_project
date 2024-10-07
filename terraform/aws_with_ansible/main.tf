@@ -40,3 +40,13 @@ module "schedule_dbs" {
   security_group_ids  = [aws_security_group.dbs_security_group.id]
   instance_name       = "schedule-dbs"
 }
+
+module "schedule_prometheus" {
+  source              = "./modules/ec2_instance"
+  ami                 = "ami-0b45ae66668865cd6"
+  instance_type       = "t2.micro"
+  subnet_id           = aws_subnet.monitoring_subnet.id
+  key_name            = aws_key_pair.instances_key_pair.key_name
+  security_group_ids  = [aws_security_group.dbs_security_group.id]
+  instance_name       = "schedule-prometheus"
+}
