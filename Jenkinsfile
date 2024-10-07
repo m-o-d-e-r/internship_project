@@ -16,8 +16,7 @@ pipeline {
                         cd terraform/aws_with_ansible
                         terraform init
                         terraform apply -auto-approve
-                        terraform output -raw schedule_api
-                        terraform output -raw schedule_dbs
+                        terraform output
                     """
                 }
             }
@@ -90,6 +89,8 @@ pipeline {
                     echo 'Running Ansible playbooks...'
 
                     def dbsHost = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_dbs', returnStdout: true).trim()
+
+                    echo "Databases location: ${dbsHost}"
 
                     sh """
                         cd terraform/aws_with_ansible
