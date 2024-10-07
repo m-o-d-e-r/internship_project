@@ -13,15 +13,18 @@
     state: started
     enabled: true
 
-- name: Remove default site
-  ansible.builtin.command: rm -rf /usr/share/nginx/html/*
-  become: true
-
-- name: Copy contents of web-artifact to Nginx html directory
+- name: Copy contents of web-artifact to schedule_web directory
   ansible.builtin.copy:
     src: web-artifact/
-    dest: /usr/share/nginx/html/
+    dest: /usr/share/nginx/schedule_web/
     mode: '0644'
     directory_mode: '0755'
     remote_src: no
+  notify: restart nginx
+
+- name: Copy nginx config for schedule_web application
+  ansible.builtin.copy:
+    src: nginx.conf
+    dest: /etc/nginx/conf.d/schedule_web.conf
+    mode: '0644'
   notify: restart nginx
