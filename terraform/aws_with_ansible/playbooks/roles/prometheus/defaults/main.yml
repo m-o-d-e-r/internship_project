@@ -1,0 +1,6 @@
+---
+
+prometheus_binary_source: https://github.com/prometheus/prometheus/releases/download/v2.55.0-rc.0/prometheus-2.55.0-rc.0.linux-amd64.tar.gz
+prometheus_binary_dest: /etc/prometheus/prometheus.tar.gz
+prometheus_config_dir: /etc/prometheus
+prometheus_user_home: /var/lib/prometheus
