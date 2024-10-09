@@ -28,3 +28,6 @@
     dest: /etc/nginx/conf.d/schedule_web.conf
     mode: '0644'
   notify: restart nginx
+
+- name: Include exporter tasks
+  ansible.builtin.include_tasks: ./prometheus_exporter.yml

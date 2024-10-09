@@ -1,0 +1,48 @@
+---
+
+- name: Ensure prometheus exporter dir exists
+  ansible.builtin.shell: |
+    mkdir {{ prometheus_exporter_base_dir }} || true
+
+- name: Download prometheus exporter archive
+  ansible.builtin.shell: |
+    wget {{ prometheus_exporter_tar_url }} -O {{ prometheus_exporter_base_dir }}/{{ prometheus_exporter_tar_name }}
+
+- name: Extract prometheus exporter
+  ansible.builtin.unarchive:
+    src: "{{ prometheus_exporter_base_dir }}/{{ prometheus_exporter_tar_name }}"
+    dest: "{{ prometheus_exporter_base_dir }}"
+    remote_src: true
+  register: prometheus_exporter_extracted
+
+- name: Delete {{ prometheus_exporter_tar_name }}
+  ansible.builtin.shell: |
+    rm -f {{ prometheus_exporter_base_dir }}/{{ prometheus_exporter_tar_name }}
+  when: prometheus_exporter_extracted.changed
+
+- name: Create symlink to {{ prometheus_exporter_base_dir }}/{{ prometheus_exporter_binary_filename }}
+  ansible.builtin.file:
+    src: "{{ prometheus_exporter_base_dir }}/{{ prometheus_exporter_binary_filename }}"
+    dest: "/usr/local/bin/{{ prometheus_exporter_binary_filename }}"
+    state: link
+
+- name: Create socket file for nginx_exporter service
+  ansible.builtin.copy:
+    src: nginx_exporter.socket
+    dest: /etc/systemd/system/
+
+- name: Create unit file for nginx_exporter service
+  ansible.builtin.template:
+    src: nginx_exporter.service
+    dest: /etc/systemd/system/
+
+- name: Create nginx_exporter user
+  ansible.builtin.user:
+    name: nginx_exporter
+    shell: /sbin/nologin
+
+- name: Ensure nginx_exporter service started
+  ansible.builtin.service:
+    name: nginx_exporter
+    state: started
+    enabled: true

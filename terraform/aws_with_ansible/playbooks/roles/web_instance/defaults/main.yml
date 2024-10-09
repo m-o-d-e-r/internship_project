@@ -1,2 +1,6 @@
 ---
-# defaults file for web_instance
+
+prometheus_exporter_tar_url: https://github.com/nginxinc/nginx-prometheus-exporter/releases/download/v1.3.0/nginx-prometheus-exporter_1.3.0_linux_amd64.tar.gz
+prometheus_exporter_tar_name: prometheus_exporter.tar.gz
+prometheus_exporter_base_dir: /etc/nginx_exporter
+prometheus_exporter_binary_filename: nginx-prometheus-exporter
