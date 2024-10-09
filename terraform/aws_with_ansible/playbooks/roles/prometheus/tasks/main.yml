@@ -33,10 +33,14 @@
   ansible.builtin.shell: "rm -f {{ prometheus_binary_dest }}"
   when: config_dir_status.rc != 0
 
-- name: Create symlink to {{ prometheus_config_dir }}/prometheus
-  ansible.builtin.shell: |
-    ln -s -f /etc/prometheus/prometheus /usr/bin/prometheus
-    ln -s -f /etc/prometheus/promtool /usr/bin/promtool
+- name: Create symlinks to prometheus' exucutable files
+  ansible.builtin.file:
+    src: "/etc/prometheus/{{ item }}"
+    dest: "/usr/bin/{{ item  }}"
+    state: link
+  with_items:
+    - prometheus
+    - promtool
 
 - name: Create prometheus service
   ansible.builtin.template:
@@ -49,3 +53,9 @@
     name: prometheus
     state: started
     enabled: true
+
+- name: Copy prometheus configuration
+  ansible.builtin.template:
+    src: prometheus.yml
+    dest: /etc/prometheus/prometheus.yml
+  notify: restart prometheus

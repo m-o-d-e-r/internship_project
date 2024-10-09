@@ -4,3 +4,5 @@ prometheus_binary_source: https://github.com/prometheus/prometheus/releases/down
 prometheus_binary_dest: /etc/prometheus/prometheus.tar.gz
 prometheus_config_dir: /etc/prometheus
 prometheus_user_home: /var/lib/prometheus
+
+web_nginx_exporter_port: 9113

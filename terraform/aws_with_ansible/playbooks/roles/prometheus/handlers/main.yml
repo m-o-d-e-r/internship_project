@@ -2,3 +2,8 @@
 
 - name: reload systemctl
   command: systemctl daemon-reload
+
+- name: restart prometheus
+  ansible.builtin.service:
+    name: prometheus
+    state: restarted
