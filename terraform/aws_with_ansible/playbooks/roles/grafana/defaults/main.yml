@@ -1,0 +1,8 @@
+---
+
+grafana_username: admin
+grafana_password: admin
+grafana_host: localhost
+grafana_port: 3000
+
+grafana_service_account_name: ansible_config

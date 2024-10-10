@@ -1,0 +1,95 @@
+---
+
+- name: Install grafana from repository
+  ansible.builtin.shell: |
+    yum install -y https://dl.grafana.com/enterprise/release/grafana-enterprise-11.2.2-1.x86_64.rpm
+
+- name: Ensure grafana is started
+  ansible.builtin.service:
+    name: grafana-server
+    state: started
+    enabled: true
+
+- name: Encode username:password into base64
+  ansible.builtin.set_fact:
+    auth_header: "Basic {{ (grafana_username + ':' + grafana_password) | b64encode }}"
+
+- name: Check if service account already exists
+  ansible.builtin.uri:
+    url: "http://{{ grafana_host }}:{{ grafana_port }}/api/serviceaccounts/search?query={{ grafana_service_account_name }}"
+    method: GET
+    headers:
+      Content-Type: "application/json"
+      Authorization: "{{ auth_header }}"
+    status_code: 200
+    return_content: yes
+  register: service_account_search
+
+- name: Create Grafana service account only if it does not exist
+  ansible.builtin.uri:
+    url: "http://{{ grafana_host }}:{{ grafana_port }}/api/serviceaccounts"
+    method: POST
+    headers:
+      Content-Type: "application/json"
+      Authorization: "{{ auth_header }}"
+    body_format: json
+    body:
+      name: "ansible_config"
+      role: "Admin"
+    status_code: 201
+    return_content: yes
+  when: service_account_search.json.totalCount == 0
+  register: service_account_response
+
+- name: Check if the service account has any tokens
+  ansible.builtin.uri:
+    url: "http://{{ grafana_host }}:{{ grafana_port }}/api/serviceaccounts/{{ service_account_search.json.serviceAccounts[0].id }}/tokens"
+    method: GET
+    headers:
+      Content-Type: "application/json"
+      Authorization: "{{ auth_header }}"
+  when: service_account_search.json.totalCount > 0
+  register: service_account_tokens
+
+- name: Create a token for the service account if no tokens exist
+  ansible.builtin.uri:
+    url: "http://{{ grafana_host }}:{{ grafana_port }}/api/serviceaccounts/{{ service_account_search.json.serviceAccounts[0].id }}/tokens"
+    method: POST
+    headers:
+      Content-Type: "application/json"
+      Authorization: "{{ auth_header }}"
+    body_format: json
+    body:
+      name: "tmp_token"
+      role: "Admin"
+      secondsToLive: 3600
+    status_code: 200
+    return_content: yes
+  when: service_account_tokens.json | length == 0
+  register: token_creation_response
+
+- name: Configure prometheus datasource
+  community.grafana.grafana_datasource:
+    name: test
+    ds_type: prometheus
+    uid: super_mega_cool_datasource
+    ds_url: http://{{ prometheus_ds_host }}:{{ prometheus_ds_port }}
+    grafana_url: http://{{ grafana_host }}:{{ grafana_port }}
+    grafana_api_key: "{{ token_creation_response.json.key }}"
+    is_default: true
+
+- name: Create/Update a dashboard
+  grafana.grafana.dashboard:
+    dashboard: "{{ lookup('ansible.builtin.file', 'Class_Schedule_dashboard.json') }}"
+    grafana_url: http://{{ grafana_host }}:{{ grafana_port }}
+    grafana_api_key: "{{ token_creation_response.json.key }}"
+    state: present
+
+- name: Delete the service account token
+  uri:
+    url: "http://{{ grafana_host }}:{{ grafana_port }}/api/serviceaccounts/{{ service_account_search.json.serviceAccounts[0].id }}/tokens/{{ token_creation_response.json.id }}"
+    method: DELETE
+    headers:
+      Content-Type: "application/json"
+      Authorization: "{{ auth_header }}"
+    status_code: 200
