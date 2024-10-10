@@ -53,7 +53,7 @@ resource "aws_security_group" "dbs_security_group" {
     from_port   = 9113
     to_port     = 9113
     protocol    = "tcp"
-    cidr_blocks = ["172.31.0.0/16"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
