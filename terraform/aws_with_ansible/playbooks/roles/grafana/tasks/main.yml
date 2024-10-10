@@ -34,26 +34,31 @@
       Authorization: "{{ auth_header }}"
     body_format: json
     body:
-      name: "ansible_config"
+      name: "{{ grafana_service_account_name }}"
       role: "Admin"
     status_code: 201
     return_content: yes
   when: service_account_search.json.totalCount == 0
-  register: service_account_response
+  register: service_account_creation_response
 
-- name: Check if the service account has any tokens
+- name: Set service account id for further use
+  ansible.builtin.set_fact:
+    service_account_id: "{{ (service_account_creation_response.json.id if service_account_search.json.totalCount == 0 else service_account_search.json.serviceAccounts[0].id) }}"
+
+- name: Check if any token exists for the service account
   ansible.builtin.uri:
-    url: "http://{{ grafana_host }}:{{ grafana_port }}/api/serviceaccounts/{{ service_account_search.json.serviceAccounts[0].id }}/tokens"
+    url: "http://{{ grafana_host }}:{{ grafana_port }}/api/serviceaccounts/{{ service_account_id }}/tokens"
     method: GET
     headers:
       Content-Type: "application/json"
       Authorization: "{{ auth_header }}"
-  when: service_account_search.json.totalCount > 0
-  register: service_account_tokens
+    status_code: 200
+    return_content: yes
+  register: token_search
 
-- name: Create a token for the service account if no tokens exist
+- name: Create a new token for the service account if none exists
   ansible.builtin.uri:
-    url: "http://{{ grafana_host }}:{{ grafana_port }}/api/serviceaccounts/{{ service_account_search.json.serviceAccounts[0].id }}/tokens"
+    url: "http://{{ grafana_host }}:{{ grafana_port }}/api/serviceaccounts/{{ service_account_id }}/tokens"
     method: POST
     headers:
       Content-Type: "application/json"
@@ -62,10 +67,8 @@
     body:
       name: "tmp_token"
       role: "Admin"
-      secondsToLive: 3600
-    status_code: 200
     return_content: yes
-  when: service_account_tokens.json | length == 0
+  when: token_search.json | length == 0
   register: token_creation_response
 
 - name: Configure prometheus datasource
@@ -86,8 +89,8 @@
     state: present
 
 - name: Delete the service account token
-  uri:
-    url: "http://{{ grafana_host }}:{{ grafana_port }}/api/serviceaccounts/{{ service_account_search.json.serviceAccounts[0].id }}/tokens/{{ token_creation_response.json.id }}"
+  ansible.builtin.uri:
+    url: "http://{{ grafana_host }}:{{ grafana_port }}/api/serviceaccounts/{{ service_account_id }}/tokens/{{ token_creation_response.json.id }}"
     method: DELETE
     headers:
       Content-Type: "application/json"
