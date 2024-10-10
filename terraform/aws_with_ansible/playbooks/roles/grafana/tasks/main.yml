@@ -45,17 +45,6 @@
   ansible.builtin.set_fact:
     service_account_id: "{{ (service_account_creation_response.json.id if service_account_search.json.totalCount == 0 else service_account_search.json.serviceAccounts[0].id) }}"
 
-- name: Check if any token exists for the service account
-  ansible.builtin.uri:
-    url: "http://{{ grafana_host }}:{{ grafana_port }}/api/serviceaccounts/{{ service_account_id }}/tokens"
-    method: GET
-    headers:
-      Content-Type: "application/json"
-      Authorization: "{{ auth_header }}"
-    status_code: 200
-    return_content: yes
-  register: token_search
-
 - name: Create a new token for the service account if none exists
   ansible.builtin.uri:
     url: "http://{{ grafana_host }}:{{ grafana_port }}/api/serviceaccounts/{{ service_account_id }}/tokens"
@@ -68,7 +57,6 @@
       name: "tmp_token"
       role: "Admin"
     return_content: yes
-  when: token_search.json | length == 0
   register: token_creation_response
 
 - name: Configure prometheus datasource
