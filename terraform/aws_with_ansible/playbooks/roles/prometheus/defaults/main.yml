@@ -6,3 +6,4 @@ prometheus_config_dir: /etc/prometheus
 prometheus_user_home: /var/lib/prometheus
 
 web_nginx_exporter_port: 9113
+dbs_postgres_exporter_port: 9187

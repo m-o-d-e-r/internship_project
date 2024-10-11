@@ -4,3 +4,7 @@
   service:
     name: postgresql
     state: restarted
+
+- name: reload systemctl
+  ansible.builtin.shell: |
+    systemctl daemon-reload

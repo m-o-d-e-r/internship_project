@@ -1,0 +1,34 @@
+
+- name: Ensure {{ postgres_exporter_dir_name }} is created
+  ansible.builtin.file:
+    dest: "{{ postgres_exporter_dir_name }}"
+    state: directory
+
+- name: Download postgres_exporter tool
+  ansible.builtin.shell: |
+    wget {{ postgres_exporter_tar_url }} -O {{ postgres_exporter_tar_name }}
+
+- name: Extract postgres_exporter archive
+  ansible.builtin.unarchive:
+    src: "{{ postgres_exporter_tar_name }}"
+    dest: "{{ postgres_exporter_dir_name }}"
+    remote_src: true
+    extra_opts: [--strip-components=1]
+
+- name: Create symlink to {{ postgres_exporter_binary_filename }}
+  ansible.builtin.file:
+    src: "{{ postgres_exporter_dir_name }}/{{ postgres_exporter_binary_filename }}"
+    dest: "/usr/local/bin/{{ postgres_exporter_binary_filename }}"
+    state: link
+
+- name: Create unit file for {{ postgres_exporter_binary_filename }} service
+  ansible.builtin.template:
+    src: postgres_exporter.service
+    dest: /etc/systemd/system/
+  notify: reload systemctl
+
+- name: Ensure {{ postgres_exporter_binary_filename }} service started
+  ansible.builtin.service:
+    name: postgres_exporter
+    state: started
+    enabled: true
