@@ -30,4 +30,4 @@
   notify: restart nginx
 
 - name: Include exporter tasks
-  ansible.builtin.include_tasks: ./prometheus_exporter.yml
+  ansible.builtin.include_tasks: ./nginx_exporter.yml
