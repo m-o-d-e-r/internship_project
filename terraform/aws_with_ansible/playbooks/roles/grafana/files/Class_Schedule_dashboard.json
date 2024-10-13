@@ -19,7 +19,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "id": 1,
+    "id": 4,
     "links": [],
     "panels": [
       {
@@ -96,7 +96,7 @@
             },
             "disableTextWrap": false,
             "editorMode": "builder",
-            "expr": "nginx_up{instance=\"ec2-35-179-177-108.eu-west-2.compute.amazonaws.com:9113\"}",
+            "expr": "nginx_up",
             "fullMetaSearch": false,
             "includeNullMetadata": true,
             "instant": false,
@@ -522,7 +522,7 @@
             },
             "disableTextWrap": false,
             "editorMode": "builder",
-            "expr": "pg_up{instance=\"ec2-18-175-57-173.eu-west-2.compute.amazonaws.com:9187\"}",
+            "expr": "pg_up",
             "fullMetaSearch": false,
             "includeNullMetadata": true,
             "instant": false,
@@ -596,7 +596,7 @@
             },
             "disableTextWrap": false,
             "editorMode": "builder",
-            "expr": "pg_exporter_scrapes_total{instance=\"ec2-18-175-57-173.eu-west-2.compute.amazonaws.com:9187\"}",
+            "expr": "pg_exporter_scrapes_total",
             "fullMetaSearch": false,
             "includeNullMetadata": true,
             "instant": false,
@@ -1056,6 +1056,633 @@
         ],
         "title": "DB sizes (in bytes)",
         "type": "piechart"
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 35
+        },
+        "id": 16,
+        "panels": [],
+        "title": "Redis",
+        "type": "row"
+      },
+      {
+        "datasource": {
+          "default": false,
+          "type": "redis-datasource",
+          "uid": "super_mega_cool_redis_datasource"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 12,
+          "w": 13,
+          "x": 0,
+          "y": 36
+        },
+        "id": 18,
+        "options": {
+          "minVizHeight": 75,
+          "minVizWidth": 75,
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showThresholdLabels": false,
+          "showThresholdMarkers": true,
+          "sizing": "auto"
+        },
+        "pluginVersion": "11.2.2",
+        "targets": [
+          {
+            "command": "info",
+            "datasource": {
+              "type": "redis-datasource",
+              "uid": "super_mega_cool_redis_datasource"
+            },
+            "query": "",
+            "refId": "A",
+            "section": "clients",
+            "type": "command"
+          }
+        ],
+        "title": "Clients",
+        "type": "gauge"
+      },
+      {
+        "datasource": {
+          "default": false,
+          "type": "redis-datasource",
+          "uid": "super_mega_cool_redis_datasource"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 5,
+          "x": 13,
+          "y": 36
+        },
+        "id": 20,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "percentChangeColorMode": "standard",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/^redis_mode$/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "pluginVersion": "11.2.2",
+        "targets": [
+          {
+            "command": "info",
+            "datasource": {
+              "type": "redis-datasource",
+              "uid": "super_mega_cool_redis_datasource"
+            },
+            "query": "",
+            "refId": "A",
+            "section": "server",
+            "type": "command"
+          }
+        ],
+        "title": "Mode",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "default": false,
+          "type": "redis-datasource",
+          "uid": "super_mega_cool_redis_datasource"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "blue",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 18,
+          "y": 36
+        },
+        "id": 21,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "percentChangeColorMode": "standard",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/^process_id$/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "pluginVersion": "11.2.2",
+        "targets": [
+          {
+            "command": "info",
+            "datasource": {
+              "type": "redis-datasource",
+              "uid": "super_mega_cool_redis_datasource"
+            },
+            "query": "",
+            "refId": "A",
+            "section": "server",
+            "type": "command"
+          }
+        ],
+        "title": "PID",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "default": false,
+          "type": "redis-datasource",
+          "uid": "super_mega_cool_redis_datasource"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 21,
+          "y": 36
+        },
+        "id": 19,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "percentChangeColorMode": "standard",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/^redis_version$/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "pluginVersion": "11.2.2",
+        "targets": [
+          {
+            "command": "info",
+            "datasource": {
+              "type": "redis-datasource",
+              "uid": "super_mega_cool_redis_datasource"
+            },
+            "query": "",
+            "refId": "A",
+            "section": "server",
+            "type": "command"
+          }
+        ],
+        "title": "Version",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "default": false,
+          "type": "redis-datasource",
+          "uid": "super_mega_cool_redis_datasource"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 4,
+          "x": 13,
+          "y": 39
+        },
+        "id": 22,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "percentChangeColorMode": "standard",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/^io_threads_active$/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "pluginVersion": "11.2.2",
+        "targets": [
+          {
+            "command": "info",
+            "datasource": {
+              "type": "redis-datasource",
+              "uid": "super_mega_cool_redis_datasource"
+            },
+            "query": "",
+            "refId": "A",
+            "section": "server",
+            "type": "command"
+          }
+        ],
+        "title": "IO Threads active",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "default": false,
+          "type": "redis-datasource",
+          "uid": "super_mega_cool_redis_datasource"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 4,
+          "x": 17,
+          "y": 39
+        },
+        "id": 23,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "percentChangeColorMode": "standard",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/^total_commands_processed$/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "pluginVersion": "11.2.2",
+        "targets": [
+          {
+            "command": "info",
+            "datasource": {
+              "type": "redis-datasource",
+              "uid": "super_mega_cool_redis_datasource"
+            },
+            "query": "",
+            "refId": "A",
+            "section": "stats",
+            "type": "command"
+          }
+        ],
+        "title": "Connection processed",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "default": false,
+          "type": "redis-datasource",
+          "uid": "super_mega_cool_redis_datasource"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 21,
+          "y": 39
+        },
+        "id": 25,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "percentChangeColorMode": "standard",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/^pubsub_channels$/",
+            "values": false
+          },
+          "showPercentChange": false,
+          "textMode": "auto",
+          "wideLayout": true
+        },
+        "pluginVersion": "11.2.2",
+        "targets": [
+          {
+            "command": "info",
+            "datasource": {
+              "type": "redis-datasource",
+              "uid": "super_mega_cool_redis_datasource"
+            },
+            "query": "",
+            "refId": "A",
+            "section": "stats",
+            "type": "command"
+          }
+        ],
+        "title": "PubSub Channels",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "default": false,
+          "type": "redis-datasource",
+          "uid": "super_mega_cool_redis_datasource"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 10,
+          "w": 11,
+          "x": 13,
+          "y": 42
+        },
+        "id": 17,
+        "options": {
+          "displayMode": "basic",
+          "maxVizHeight": 300,
+          "minVizHeight": 16,
+          "minVizWidth": 8,
+          "namePlacement": "auto",
+          "orientation": "horizontal",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showUnfilled": true,
+          "sizing": "auto",
+          "valueMode": "color"
+        },
+        "pluginVersion": "11.2.2",
+        "targets": [
+          {
+            "command": "info",
+            "datasource": {
+              "type": "redis-datasource",
+              "uid": "super_mega_cool_redis_datasource"
+            },
+            "query": "",
+            "refId": "A",
+            "section": "cpu",
+            "type": "command"
+          }
+        ],
+        "title": "CPU consumption",
+        "type": "bargauge"
+      },
+      {
+        "datasource": {
+          "default": false,
+          "type": "redis-datasource",
+          "uid": "super_mega_cool_redis_datasource"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "align": "auto",
+              "cellOptions": {
+                "type": "auto"
+              },
+              "inspect": false
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 13,
+          "x": 0,
+          "y": 48
+        },
+        "id": 24,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "countRows": false,
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true
+        },
+        "pluginVersion": "11.2.2",
+        "targets": [
+          {
+            "command": "info",
+            "datasource": {
+              "type": "redis-datasource",
+              "uid": "super_mega_cool_redis_datasource"
+            },
+            "query": "",
+            "refId": "A",
+            "section": "errorstats",
+            "type": "command"
+          }
+        ],
+        "title": "Errors",
+        "type": "table"
       }
     ],
     "refresh": "1m",
@@ -1072,7 +1699,7 @@
     "timezone": "browser",
     "title": "Class Schedule",
     "uid": "ce0diszf7yhhce",
-    "version": 23,
+    "version": 2,
     "weekStart": ""
   },
   "overwrite": true

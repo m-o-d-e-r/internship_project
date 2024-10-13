@@ -54,8 +54,8 @@
       Authorization: "{{ auth_header }}"
     body_format: json
     body:
-      name: "tmp_token"
-      role: "Admin"
+      name: "{{ 1000 | random }}"
+      secondsToLive:	1800
     return_content: yes
   register: token_creation_response
 
@@ -68,6 +68,15 @@
     grafana_url: http://{{ grafana_host }}:{{ grafana_port }}
     grafana_api_key: "{{ token_creation_response.json.key }}"
     is_default: true
+
+- name: Configure Redis datasource
+  community.grafana.grafana_datasource:
+    name: redis-datasource
+    ds_type: redis-datasource
+    uid: super_mega_cool_redis_datasource
+    ds_url: redis://ec2-18-171-209-131.eu-west-2.compute.amazonaws.com:6379
+    grafana_url: http://{{ grafana_host }}:{{ grafana_port }}
+    grafana_api_key: "{{ token_creation_response.json.key }}"
 
 - name: Create/Update a dashboard
   grafana.grafana.dashboard:
