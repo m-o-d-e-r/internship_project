@@ -6,3 +6,6 @@ grafana_host: localhost
 grafana_port: 3000
 
 grafana_service_account_name: ansible_config
+
+prometheus_ds_port: 9090
+redis_ds_port: 6379

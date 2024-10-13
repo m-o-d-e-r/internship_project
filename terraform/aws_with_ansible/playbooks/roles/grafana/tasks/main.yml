@@ -74,7 +74,7 @@
     name: redis-datasource
     ds_type: redis-datasource
     uid: super_mega_cool_redis_datasource
-    ds_url: redis://ec2-18-171-209-131.eu-west-2.compute.amazonaws.com:6379
+    ds_url: redis://{{ redis_ds_host }}:{{ redis_ds_port }}
     grafana_url: http://{{ grafana_host }}:{{ grafana_port }}
     grafana_api_key: "{{ token_creation_response.json.key }}"
 
