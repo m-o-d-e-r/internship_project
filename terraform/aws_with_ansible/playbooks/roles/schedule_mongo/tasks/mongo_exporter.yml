@@ -1,0 +1,23 @@
+
+- name: Install MongoDB exporter
+  ansible.builtin.yum:
+    name: "{{ mongo_exporter_rpm_url }}"
+    state: present
+
+- name: Create {{ mongo_exporter_binary_name }} service
+  ansible.builtin.template:
+    src: mongodb_exporter.service
+    dest: /etc/systemd/system/
+  notify: reload systemctl
+
+- name: Create {{ mongo_exporter_binary_name }} env file for service
+  ansible.builtin.template:
+    src: mongodb_exporter.env
+    dest: /etc/default/mongodb_exporter
+  notify: restart mongodb_exporter
+
+- name: Ensure {{ mongo_exporter_binary_name }} service started
+  ansible.builtin.service:
+    name: mongodb_exporter.service
+    state: started
+    enabled: true

@@ -35,3 +35,8 @@ scrape_configs:
     scrape_interval: 1m
     static_configs:
       - targets: ["{{ dbs_postgres_exporter_host }}:{{ dbs_postgres_exporter_port }}"]
+
+  - job_name: "mongodb"
+    scrape_interval: 1m
+    static_configs:
+      - targets: ["{{ dbs_mongo_exporter_host }}:{{ dbs_mongo_exporter_port }}"]

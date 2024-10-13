@@ -1,2 +1,7 @@
 ---
-# defaults file for schedule_mongo
+
+mongo_exporter_rpm_url: https://github.com/percona/mongodb_exporter/releases/download/v0.41.2/mongodb_exporter-0.41.2.linux-64-bit.rpm
+mongo_exporter_binary_name: mongodb_exporter
+
+mongo_exporter_mongo_host: localhost
+mongo_exporter_mongo_port: 27017
