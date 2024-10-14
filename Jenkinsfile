@@ -81,9 +81,9 @@ pipeline {
                         cd terraform/aws_with_ansible
 
                         export ANSIBLE_HOST_KEY_CHECKING=False
-                        export SCHEDULE_DBS_HOST=`terraform output -raw schedule_dbs`
-                        export SCHEDULE_WEB_HOST=`terraform output -raw schedule_web`
-                        export SCHEDULE_PROMETHEUS_HOST=`terraform output -raw schedule_prometheus`
+                        export SCHEDULE_DBS_HOST=$(terraform output -raw schedule_dbs)
+                        export SCHEDULE_WEB_HOST=$(terraform output -raw schedule_web)
+                        export SCHEDULE_PROMETHEUS_HOST=$(terraform output -raw schedule_prometheus)
 
                         ansible-playbook playbooks/python_playbook.yaml -i inventory/aws_ec2.yaml
                         ansible-playbook playbooks/dbs_playbook.yaml -i inventory/aws_ec2.yaml
