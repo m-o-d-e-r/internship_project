@@ -34,6 +34,7 @@
     regexp: '^#?listen_addresses'
     line: "listen_addresses = '*'"
     state: present
+  when: true
   notify: restart postgres
 
 - name: Copy pg_hba.conf to remote host

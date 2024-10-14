@@ -69,6 +69,18 @@
     grafana_api_key: "{{ token_creation_response.json.key }}"
     is_default: true
 
+- name: Install/update Grafana Redis plugin
+  community.grafana.grafana_plugin:
+    name: redis-datasource
+    version: latest
+    state: present
+  become_user: grafana
+
+- name: Restart Grafana manualy
+  ansible.builtin.service:
+    name: grafana-server
+    state: restarted
+
 - name: Configure Redis datasource
   community.grafana.grafana_datasource:
     name: redis-datasource

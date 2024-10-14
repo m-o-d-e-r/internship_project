@@ -3,6 +3,7 @@
   ansible.builtin.yum:
     name: "{{ mongo_exporter_rpm_url }}"
     state: present
+    disable_gpg_check: true
 
 - name: Create {{ mongo_exporter_binary_name }} service
   ansible.builtin.template:
