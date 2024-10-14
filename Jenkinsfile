@@ -48,17 +48,6 @@ pipeline {
             }
         }
 
-        stage('Push Images to Registry') {
-            steps {
-                script {
-                    docker.withRegistry('', env.registryCredential) {
-                        apiImage.push("${env.GIT_BRANCH}")
-                        webImage.push("${env.GIT_BRANCH}")
-                    }
-                }
-            }
-        }
-
         stage('Run Containers') {
             steps {
                 script {
@@ -88,19 +77,26 @@ pipeline {
                 script {
                     echo 'Running Ansible playbooks...'
 
-                    def dbsHost = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_dbs', returnStdout: true).trim()
-
-                    echo "Databases location: ${dbsHost}"
-
                     sh """
                         cd terraform/aws_with_ansible
 
                         export ANSIBLE_HOST_KEY_CHECKING=False
+                        export SCHEDULE_DBS_HOST=`terraform output -raw schedule_dbs`
+                        export SCHEDULE_WEB_HOST=`terraform output -raw schedule_web`
+                        export SCHEDULE_PROMETHEUS_HOST=`terraform output -raw schedule_prometheus`
 
                         ansible-playbook playbooks/python_playbook.yaml -i inventory/aws_ec2.yaml
                         ansible-playbook playbooks/dbs_playbook.yaml -i inventory/aws_ec2.yaml
-                        ansible-playbook playbooks/api_playbook.yaml -i inventory/aws_ec2.yaml -e "update_hosts_arg='${dbsHost}=schedule-db ${dbsHost}=schedule-mongo ${dbsHost}=schedule-redis'"
+                        ansible-playbook playbooks/api_playbook.yaml \
+                            -i inventory/aws_ec2.yaml \
+                            -e "update_hosts_arg='${SCHEDULE_DBS_HOST}=schedule-db ${SCHEDULE_DBS_HOST}=schedule-mongo ${SCHEDULE_DBS_HOST}=schedule-redis'"
                         ansible-playbook playbooks/web_playbook.yaml -i inventory/aws_ec2.yaml
+                        ansible-playbook playbooks/prometheus_playbook.yaml \
+                            -i inventory/aws_ec2.yaml \
+                            -e "web_nginx_exporter_host=${SCHEDULE_WEB_HOST} dbs_postgres_exporter_host=${SCHEDULE_DBS_HOST} dbs_mongo_exporter_host=${SCHEDULE_DBS_HOST}"
+                        ansible-playbook playbooks/grafana_playbook.yaml \
+                            -i inventory/aws_ec2.yaml \
+                            -e "prometheus_ds_host=${SCHEDULE_PROMETHEUS_HOST} redis_ds_host=${SCHEDULE_DBS_HOST}"
                     """
                 }
             }
