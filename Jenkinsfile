@@ -89,14 +89,14 @@ pipeline {
                         ansible-playbook playbooks/dbs_playbook.yaml -i inventory/aws_ec2.yaml
                         ansible-playbook playbooks/api_playbook.yaml \
                             -i inventory/aws_ec2.yaml \
-                            -e "update_hosts_arg='${SCHEDULE_DBS_HOST}=schedule-db ${SCHEDULE_DBS_HOST}=schedule-mongo ${SCHEDULE_DBS_HOST}=schedule-redis'"
+                            -e "update_hosts_arg='$SCHEDULE_DBS_HOST=schedule-db $SCHEDULE_DBS_HOST=schedule-mongo $SCHEDULE_DBS_HOST=schedule-redis'"
                         ansible-playbook playbooks/web_playbook.yaml -i inventory/aws_ec2.yaml
                         ansible-playbook playbooks/prometheus_playbook.yaml \
                             -i inventory/aws_ec2.yaml \
-                            -e "web_nginx_exporter_host=${SCHEDULE_WEB_HOST} dbs_postgres_exporter_host=${SCHEDULE_DBS_HOST} dbs_mongo_exporter_host=${SCHEDULE_DBS_HOST}"
+                            -e "web_nginx_exporter_host=$SCHEDULE_WEB_HOST dbs_postgres_exporter_host=$SCHEDULE_DBS_HOST dbs_mongo_exporter_host=$SCHEDULE_DBS_HOST"
                         ansible-playbook playbooks/grafana_playbook.yaml \
                             -i inventory/aws_ec2.yaml \
-                            -e "prometheus_ds_host=${SCHEDULE_PROMETHEUS_HOST} redis_ds_host=${SCHEDULE_DBS_HOST}"
+                            -e "prometheus_ds_host=$SCHEDULE_PROMETHEUS_HOST redis_ds_host=$SCHEDULE_DBS_HOST"
                     """
                 }
             }
