@@ -31,3 +31,6 @@
     name: mongod
     state: started
     enabled: true
+
+- name: Include {{ mongo_exporter_binary_name }} tasks
+  ansible.builtin.include_tasks: ./mongo_exporter.yml

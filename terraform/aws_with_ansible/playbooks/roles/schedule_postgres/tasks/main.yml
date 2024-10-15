@@ -1,12 +1,5 @@
 ---
 
-- name: Create user for indent connection
-  user:
-    name: "{{ pg_user }}"
-    password: !
-    state: present
-    createhome: yes
-
 - name: Ensure postgresql is at the latest version
   ansible.builtin.yum:
     name: "{{ item }}"
@@ -41,13 +34,16 @@
     regexp: '^#?listen_addresses'
     line: "listen_addresses = '*'"
     state: present
+  when: true
   notify: restart postgres
 
-- name: Allow PostgreSQL external access in pg_hba.conf
-  lineinfile:
-    path: /var/lib/pgsql/data/pg_hba.conf
-    line: 'host all all 0.0.0.0/0 md5'
-    state: present
+- name: Copy pg_hba.conf to remote host
+  ansible.builtin.copy:
+    src: pg_hba.conf
+    dest: /var/lib/pgsql/data/pg_hba.conf
+    owner: postgres
+    group: postgres
+    mode: '0600'
   notify: restart postgres
 
 - name: Create database
@@ -93,3 +89,6 @@
     privs: ALL
     grant_option: true
   become_user: postgres
+
+- name: Include postgres_exporter tasks
+  ansible.builtin.include_tasks: ./postgres_exporter.yml

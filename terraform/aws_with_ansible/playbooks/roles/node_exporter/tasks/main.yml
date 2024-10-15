@@ -1,0 +1,65 @@
+---
+
+- name: Check if node_exporter directory exists
+  ansible.builtin.stat:
+    path: "{{ node_exporter_dir }}"
+  register: node_exporter_dir_stat
+
+- name: Ensure {{ node_exporter_dir }} dir exists
+  ansible.builtin.file:
+    dest: "{{ node_exporter_dir }}"
+    state: directory
+  when: not node_exporter_dir_stat.stat.exists
+
+- name: Download {{ node_exporter_tar_name }}
+  ansible.builtin.shell: |
+    wget {{ node_exporter_tar_url }} -O {{ node_exporter_tar_name }}
+  when: not node_exporter_dir_stat.stat.exists
+
+- name: Extract {{ node_exporter_tar_name }}
+  ansible.builtin.unarchive:
+    src: "{{ node_exporter_tar_name }}"
+    dest: "{{ node_exporter_dir }}"
+    remote_src: yes
+    extra_opts:
+      --strip-components=1
+  when: not node_exporter_dir_stat.stat.exists
+
+- name: Delete {{ node_exporter_tar_name }}
+  ansible.builtin.shell: |
+    rm -f {{ node_exporter_tar_name }}
+  when: not node_exporter_dir_stat.stat.exists
+
+- name: Create symlink to {{ node_exporter_binary_name }}
+  ansible.builtin.file:
+    src: "{{ node_exporter_dir }}/{{ node_exporter_binary_name }}"
+    dest: "/usr/sbin/{{ node_exporter_binary_name }}"
+    state: link
+  when: not node_exporter_dir_stat.stat.exists
+
+- name: Create socket file for {{ node_exporter_binary_name }} service
+  ansible.builtin.copy:
+    src: node_exporter.socket
+    dest: /etc/systemd/system/
+
+- name: Create unit file for {{ node_exporter_binary_name }} service
+  ansible.builtin.copy:
+    src: node_exporter.socket
+    dest: /etc/systemd/system/
+
+- name: Create unit file for {{ node_exporter_binary_name }} service
+  ansible.builtin.template:
+    src: node_exporter.service
+    dest: /etc/systemd/system/
+  notify: reload systemctl
+
+- name: Create user for {{ node_exporter_binary_name }} service
+  ansible.builtin.user:
+    name: node_exporter
+    shell: /sbin/nologin
+
+- name: Ensure {{ node_exporter_binary_name }} service running
+  ansible.builtin.service:
+    name: "{{ node_exporter_binary_name }}"
+    state: started
+    enabled: true

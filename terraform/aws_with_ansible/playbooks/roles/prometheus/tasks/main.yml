@@ -1,0 +1,61 @@
+---
+
+- name: Create prometheus user
+  ansible.builtin.user:
+    name: prometheus
+    shell: /bin/false
+    home: "{{ prometheus_user_home }}"
+
+- name: Check if {{ prometheus_config_dir }} exists
+  ansible.builtin.shell: "ls {{ prometheus_config_dir }}"
+  ignore_errors: true
+  register: config_dir_status
+
+- name: Create {{ prometheus_config_dir }}
+  ansible.builtin.shell: "mkdir {{ prometheus_config_dir }}"
+  when: config_dir_status.rc != 0
+
+- name: Download prometheus binaries
+  ansible.builtin.shell: |
+    wget {{ prometheus_binary_source }} -O {{ prometheus_binary_dest }}
+  when: config_dir_status.rc != 0
+
+- name: Extract prometheus binaries
+  ansible.builtin.unarchive:
+    src: "{{ prometheus_binary_dest }}"
+    dest: "{{ prometheus_config_dir }}"
+    remote_src: yes
+    extra_opts:
+      --strip-components=1
+  when: config_dir_status.rc != 0
+
+- name: Delete unnecessary archive
+  ansible.builtin.shell: "rm -f {{ prometheus_binary_dest }}"
+  when: config_dir_status.rc != 0
+
+- name: Create symlinks to prometheus' exucutable files
+  ansible.builtin.file:
+    src: "/etc/prometheus/{{ item }}"
+    dest: "/usr/bin/{{ item  }}"
+    state: link
+  with_items:
+    - prometheus
+    - promtool
+
+- name: Create prometheus service
+  ansible.builtin.template:
+    src: prometheus.service.j2
+    dest: /etc/systemd/system/prometheus.service
+  notify: reload systemctl
+
+- name: Ensure prometheus started
+  ansible.builtin.service:
+    name: prometheus
+    state: started
+    enabled: true
+
+- name: Copy prometheus configuration
+  ansible.builtin.template:
+    src: prometheus.yml
+    dest: /etc/prometheus/prometheus.yml
+  notify: restart prometheus

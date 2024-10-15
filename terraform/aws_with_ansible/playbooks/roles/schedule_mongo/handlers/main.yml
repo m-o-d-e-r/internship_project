@@ -1,6 +1,14 @@
 ---
 
+- name: reload systemctl
+  command: systemctl daemon-reload
+
 - name: restart mongod
   service:
     name: mongod
+    state: restarted
+
+- name: restart mongodb_exporter
+  service:
+    name: mongodb_exporter
     state: restarted
