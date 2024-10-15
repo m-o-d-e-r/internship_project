@@ -40,3 +40,8 @@ scrape_configs:
     scrape_interval: 1m
     static_configs:
       - targets: ["{{ dbs_mongo_exporter_host }}:{{ dbs_mongo_exporter_port }}"]
+
+  - job_name: "node_exporter"
+    scrape_interval: 1m
+    static_configs:
+      - targets: {{ node_exporter_targets.split(',') | to_nice_json }}

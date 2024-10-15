@@ -1,0 +1,11 @@
+---
+
+- name: Configure node_exporter
+  hosts: aws_ec2
+  vars_files: 
+    - common.yaml
+  remote_user: "{{ remote_user }}"
+  become: true
+
+  roles:
+    - node_exporter
