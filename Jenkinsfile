@@ -96,7 +96,7 @@ pipeline {
                         ansible-playbook playbooks/web_playbook.yaml -i inventory/aws_ec2.yaml
                         ansible-playbook playbooks/prometheus_playbook.yaml \
                             -i inventory/aws_ec2.yaml \
-                            -e "web_nginx_exporter_host=${scheduleWebHost} dbs_postgres_exporter_host=${scheduleDbsHost} dbs_mongo_exporter_host=${scheduleDbsHost} node_exporter_targets='${scheduleApisHost}:9100'"
+                            -e "web_nginx_exporter_host=${scheduleWebHost} dbs_postgres_exporter_host=${scheduleDbsHost} dbs_mongo_exporter_host=${scheduleDbsHost} node_exporter_targets='${scheduleApisHost}:9100,${scheduleDbsHost}:9100,${scheduleWebHost}:9100,${schedulePrometheusHost}:9100'"
                         ansible-playbook playbooks/grafana_playbook.yaml \
                             -i inventory/aws_ec2.yaml \
                             -e "prometheus_ds_host=${schedulePrometheusHost} redis_ds_host=${scheduleDbsHost}"
