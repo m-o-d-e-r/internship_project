@@ -1,6 +1,11 @@
 ---
 
 - name: restart tomcat9
-  service:
+  ansible.builtin.service:
     name: tomcat9
+    state: restarted
+
+- name: restart promtail
+  ansible.builtin.service:
+    name: promtail
     state: restarted

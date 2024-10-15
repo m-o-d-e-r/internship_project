@@ -1,0 +1,17 @@
+---
+
+- name: Install promtail
+  ansible.builtin.yum:
+    name: "{{ promtail_rpm_url }}"
+
+- name: Create Promtail configuration file
+  ansible.builtin.template:
+    src: promtail.yml
+    dest: /etc/promtail/config.yml
+  notify: restart promtail
+
+- name: Enable and start Promtail service
+  ansible.builtin.service:
+    name: promtail
+    state: started
+    enabled: yes
