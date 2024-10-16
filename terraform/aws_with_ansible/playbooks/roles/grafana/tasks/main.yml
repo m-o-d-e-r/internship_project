@@ -61,13 +61,22 @@
 
 - name: Configure prometheus datasource
   community.grafana.grafana_datasource:
-    name: test
+    name: prometheus
     ds_type: prometheus
     uid: super_mega_cool_datasource
     ds_url: http://{{ prometheus_ds_host }}:{{ prometheus_ds_port }}
     grafana_url: http://{{ grafana_host }}:{{ grafana_port }}
     grafana_api_key: "{{ token_creation_response.json.key }}"
     is_default: true
+
+- name: Configure Loki datasource
+  community.grafana.grafana_datasource:
+    name: Loki
+    ds_type: loki
+    uid: loki_ds
+    ds_url: http://{{ loki_ds_host }}:{{ loki_ds_port }}
+    grafana_url: http://{{ grafana_host }}:{{ grafana_port }}
+    grafana_api_key: "{{ token_creation_response.json.key }}"
 
 - name: Install/update Grafana Redis plugin
   community.grafana.grafana_plugin:
