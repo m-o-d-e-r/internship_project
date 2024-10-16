@@ -9,3 +9,4 @@ grafana_service_account_name: ansible_config
 
 prometheus_ds_port: 9090
 redis_ds_port: 6379
+loki_ds_port: 3100

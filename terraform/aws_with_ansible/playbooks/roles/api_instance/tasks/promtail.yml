@@ -3,12 +3,20 @@
 - name: Install promtail
   ansible.builtin.yum:
     name: "{{ promtail_rpm_url }}"
+    state: present
+    disable_gpg_check: true
 
 - name: Create Promtail configuration file
   ansible.builtin.template:
     src: promtail.yml
     dest: /etc/promtail/config.yml
   notify: restart promtail
+
+- name: Adding promtail user to systemd-journal
+  user:
+    name: promtail
+    groups: systemd-journal
+    append: yes
 
 - name: Enable and start Promtail service
   ansible.builtin.service:
