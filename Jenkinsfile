@@ -74,34 +74,44 @@ pipeline {
 
         stage('Run Ansible Playbook') {
             steps {
-                script {
-                    echo 'Running Ansible playbooks...'
+                dir('terraform/aws_with_ansible') {
+                    script {
+                        echo 'Running Ansible playbooks...'
 
-                    def scheduleApisHost = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_api', returnStdout: true).trim()
-                    def scheduleDbsHost = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_dbs', returnStdout: true).trim()
-                    def scheduleWebHost = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_web', returnStdout: true).trim()
-                    def schedulePrometheusHost = sh(script: 'cd terraform/aws_with_ansible && terraform output -raw schedule_prometheus', returnStdout: true).trim()
+                        def scheduleApisHost = sh(script: 'terraform output -raw schedule_api', returnStdout: true).trim()
+                        def scheduleDbsHost = sh(script: 'terraform output -raw schedule_dbs', returnStdout: true).trim()
+                        def scheduleWebHost = sh(script: 'terraform output -raw schedule_web', returnStdout: true).trim()
+                        def schedulePrometheusHost = sh(script: 'terraform output -raw schedule_prometheus', returnStdout: true).trim()
 
-                    sh """
-                        cd terraform/aws_with_ansible
+                        sh """
+                            export ANSIBLE_HOST_KEY_CHECKING=False
 
-                        export ANSIBLE_HOST_KEY_CHECKING=False
+                            ansible-playbook playbooks/python_playbook.yaml -i inventory/aws_ec2.yaml
+                            ansible-playbook playbooks/node_exporter.yaml -i inventory/aws_ec2.yaml
+                            ansible-playbook playbooks/dbs_playbook.yaml -i inventory/aws_ec2.yaml
+                            ansible-playbook playbooks/loki_playbook.yaml -i inventory/aws_ec2.yaml
 
-                        ansible-playbook playbooks/python_playbook.yaml -i inventory/aws_ec2.yaml
-                        ansible-playbook playbooks/node_exporter.yaml -i inventory/aws_ec2.yaml
-                        ansible-playbook playbooks/dbs_playbook.yaml -i inventory/aws_ec2.yaml
-                        ansible-playbook playbooks/loki_playbook.yaml -i inventory/aws_ec2.yaml
-                        ansible-playbook playbooks/api_playbook.yaml \
-                            -i inventory/aws_ec2.yaml \
-                            -e "update_hosts_arg='${scheduleDbsHost}=schedule-db ${scheduleDbsHost}=schedule-mongo ${scheduleDbsHost}=schedule-redis' loki_host=${schedulePrometheusHost}"
-                        ansible-playbook playbooks/web_playbook.yaml -i inventory/aws_ec2.yaml
-                        ansible-playbook playbooks/prometheus_playbook.yaml \
-                            -i inventory/aws_ec2.yaml \
-                            -e "web_nginx_exporter_host=${scheduleWebHost} dbs_postgres_exporter_host=${scheduleDbsHost} dbs_mongo_exporter_host=${scheduleDbsHost} node_exporter_targets='${scheduleApisHost}:9100,${scheduleDbsHost}:9100,${scheduleWebHost}:9100,${schedulePrometheusHost}:9100'"
-                        ansible-playbook playbooks/grafana_playbook.yaml \
-                            -i inventory/aws_ec2.yaml \
-                            -e "prometheus_ds_host=${schedulePrometheusHost} redis_ds_host=${scheduleDbsHost} loki_ds_host=localhost"
-                    """
+                            ansible-playbook playbooks/api_playbook.yaml \
+                                -i inventory/aws_ec2.yaml \
+                                -e "update_hosts_arg='${scheduleDbsHost}=schedule-db ${scheduleDbsHost}=schedule-mongo ${scheduleDbsHost}=schedule-redis' \
+                                    loki_host=${schedulePrometheusHost}"
+
+                            ansible-playbook playbooks/web_playbook.yaml -i inventory/aws_ec2.yaml
+
+                            ansible-playbook playbooks/prometheus_playbook.yaml \
+                                -i inventory/aws_ec2.yaml \
+                                -e "web_nginx_exporter_host=${scheduleWebHost} \
+                                    dbs_postgres_exporter_host=${scheduleDbsHost} \
+                                    dbs_mongo_exporter_host=${scheduleDbsHost} \
+                                    node_exporter_targets='${scheduleApisHost}:9100,${scheduleDbsHost}:9100,${scheduleWebHost}:9100,${schedulePrometheusHost}:9100'"
+
+                            ansible-playbook playbooks/grafana_playbook.yaml \
+                                -i inventory/aws_ec2.yaml \
+                                -e "prometheus_ds_host=${schedulePrometheusHost} \
+                                    redis_ds_host=${scheduleDbsHost} \
+                                    loki_ds_host=localhost"
+                        """
+                    }
                 }
             }
         }
