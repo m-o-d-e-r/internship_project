@@ -36,3 +36,6 @@
 - name: Run update_hosts.sh script if /etc/hosts does not contain the necessary data
   ansible.builtin.shell: "/var/api_scripts/update_hosts.sh {{ update_hosts_arg }}"
   when: true
+
+- name: Include promtail.yml tasks
+  ansible.builtin.include_tasks: ./promtail.yml

@@ -1,2 +1,5 @@
 ---
-# defaults file for api_instance
+
+promtail_rpm_url: https://github.com/grafana/loki/releases/download/v3.2.0/promtail-3.2.0.x86_64.rpm
+
+loki_port: 3100
