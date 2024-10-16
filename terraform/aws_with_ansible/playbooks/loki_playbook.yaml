@@ -1,0 +1,21 @@
+---
+
+- name: Configure Grafana
+  hosts: instances_schedule_prometheus
+  vars_files: 
+    - common.yaml
+  remote_user: "{{ remote_user }}"
+  become: true
+
+  tasks:
+    - name: Install Loki
+      ansible.builtin.yum:
+        name: "{{ loki_rpm_url }}"
+        state: present
+        disable_gpg_check: true
+
+    - name: Enable and start Loki service
+      ansible.builtin.service:
+        name: loki
+        state: started
+        enabled: yes
