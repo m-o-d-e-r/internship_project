@@ -1,7 +1,6 @@
 pipeline {
     environment {
         imagenamePrefix = "luckymode"
-        registryCredential = 'dockerhub-cred'
         artifactsDestFolder = "./terraform/aws_with_ansible/playbooks/files"
         apiPort = 8080
     }
