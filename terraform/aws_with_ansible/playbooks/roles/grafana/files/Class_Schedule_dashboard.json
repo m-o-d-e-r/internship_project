@@ -64,7 +64,7 @@
               "h": 4,
               "w": 3,
               "x": 0,
-              "y": 65
+              "y": 17
             },
             "id": 4,
             "options": {
@@ -138,7 +138,7 @@
               "h": 8,
               "w": 6,
               "x": 3,
-              "y": 65
+              "y": 17
             },
             "id": 14,
             "options": {
@@ -224,7 +224,7 @@
               "h": 14,
               "w": 15,
               "x": 9,
-              "y": 65
+              "y": 17
             },
             "id": 3,
             "options": {
@@ -303,7 +303,7 @@
               "h": 4,
               "w": 3,
               "x": 0,
-              "y": 69
+              "y": 21
             },
             "id": 15,
             "options": {
@@ -409,7 +409,7 @@
               "h": 6,
               "w": 9,
               "x": 0,
-              "y": 73
+              "y": 25
             },
             "id": 1,
             "options": {
@@ -491,7 +491,7 @@
               "h": 4,
               "w": 4,
               "x": 0,
-              "y": 66
+              "y": 18
             },
             "id": 7,
             "options": {
@@ -565,7 +565,7 @@
               "h": 8,
               "w": 4,
               "x": 4,
-              "y": 66
+              "y": 18
             },
             "id": 9,
             "options": {
@@ -672,7 +672,7 @@
               "h": 8,
               "w": 16,
               "x": 8,
-              "y": 66
+              "y": 18
             },
             "id": 10,
             "options": {
@@ -741,7 +741,7 @@
               "h": 4,
               "w": 4,
               "x": 0,
-              "y": 70
+              "y": 22
             },
             "id": 8,
             "options": {
@@ -816,7 +816,7 @@
               "h": 11,
               "w": 9,
               "x": 0,
-              "y": 74
+              "y": 26
             },
             "id": 11,
             "options": {
@@ -925,7 +925,7 @@
               "h": 11,
               "w": 9,
               "x": 9,
-              "y": 74
+              "y": 26
             },
             "id": 13,
             "options": {
@@ -1006,7 +1006,7 @@
               "h": 11,
               "w": 6,
               "x": 18,
-              "y": 74
+              "y": 26
             },
             "id": 12,
             "options": {
@@ -1101,7 +1101,7 @@
               "h": 12,
               "w": 13,
               "x": 0,
-              "y": 67
+              "y": 19
             },
             "id": 18,
             "options": {
@@ -1164,7 +1164,7 @@
               "h": 3,
               "w": 5,
               "x": 13,
-              "y": 67
+              "y": 19
             },
             "id": 20,
             "options": {
@@ -1229,7 +1229,7 @@
               "h": 3,
               "w": 3,
               "x": 18,
-              "y": 67
+              "y": 19
             },
             "id": 21,
             "options": {
@@ -1298,7 +1298,7 @@
               "h": 3,
               "w": 3,
               "x": 21,
-              "y": 67
+              "y": 19
             },
             "id": 19,
             "options": {
@@ -1367,7 +1367,7 @@
               "h": 3,
               "w": 4,
               "x": 13,
-              "y": 70
+              "y": 22
             },
             "id": 22,
             "options": {
@@ -1436,7 +1436,7 @@
               "h": 3,
               "w": 4,
               "x": 17,
-              "y": 70
+              "y": 22
             },
             "id": 23,
             "options": {
@@ -1505,7 +1505,7 @@
               "h": 3,
               "w": 3,
               "x": 21,
-              "y": 70
+              "y": 22
             },
             "id": 25,
             "options": {
@@ -1574,7 +1574,7 @@
               "h": 10,
               "w": 11,
               "x": 13,
-              "y": 73
+              "y": 25
             },
             "id": 17,
             "options": {
@@ -1651,7 +1651,7 @@
               "h": 4,
               "w": 13,
               "x": 0,
-              "y": 79
+              "y": 31
             },
             "id": 24,
             "options": {
@@ -1729,7 +1729,7 @@
               "h": 8,
               "w": 7,
               "x": 0,
-              "y": 68
+              "y": 20
             },
             "id": 27,
             "options": {
@@ -1804,7 +1804,7 @@
               "h": 8,
               "w": 10,
               "x": 7,
-              "y": 68
+              "y": 20
             },
             "id": 28,
             "options": {
@@ -1912,7 +1912,7 @@
               "h": 8,
               "w": 7,
               "x": 17,
-              "y": 68
+              "y": 20
             },
             "id": 29,
             "options": {
@@ -1982,7 +1982,7 @@
               "h": 9,
               "w": 9,
               "x": 0,
-              "y": 76
+              "y": 28
             },
             "id": 30,
             "options": {
@@ -2048,7 +2048,7 @@
               "h": 9,
               "w": 4,
               "x": 9,
-              "y": 76
+              "y": 28
             },
             "id": 32,
             "options": {
@@ -2124,7 +2124,7 @@
               "h": 9,
               "w": 4,
               "x": 13,
-              "y": 76
+              "y": 28
             },
             "id": 31,
             "options": {
@@ -2239,7 +2239,7 @@
               "h": 9,
               "w": 7,
               "x": 17,
-              "y": 76
+              "y": 28
             },
             "id": 33,
             "options": {
@@ -2322,7 +2322,7 @@
           "x": 0,
           "y": 5
         },
-        "id": 35,
+        "id": 40,
         "options": {
           "displayMode": "basic",
           "maxVizHeight": 300,
@@ -2426,7 +2426,7 @@
           "x": 12,
           "y": 5
         },
-        "id": 36,
+        "id": 35,
         "options": {
           "legend": {
             "calcs": [],
@@ -2476,7 +2476,7 @@
               "barAlignment": 0,
               "barWidthFactor": 0.6,
               "drawStyle": "line",
-              "fillOpacity": 25,
+              "fillOpacity": 0,
               "gradientMode": "none",
               "hideFrom": {
                 "legend": false,
@@ -2494,7 +2494,7 @@
               "spanNulls": false,
               "stacking": {
                 "group": "A",
-                "mode": "normal"
+                "mode": "none"
               },
               "thresholdsStyle": {
                 "mode": "off"
@@ -2523,13 +2523,13 @@
           "x": 0,
           "y": 13
         },
-        "id": 37,
+        "id": 36,
         "options": {
           "legend": {
             "calcs": [],
-            "displayMode": "hidden",
-            "placement": "right",
-            "showLegend": false
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
           },
           "tooltip": {
             "mode": "single",
@@ -2573,7 +2573,7 @@
               "barAlignment": 0,
               "barWidthFactor": 0.6,
               "drawStyle": "line",
-              "fillOpacity": 25,
+              "fillOpacity": 0,
               "gradientMode": "none",
               "hideFrom": {
                 "legend": false,
@@ -2591,7 +2591,7 @@
               "spanNulls": false,
               "stacking": {
                 "group": "A",
-                "mode": "normal"
+                "mode": "none"
               },
               "thresholdsStyle": {
                 "mode": "off"
@@ -2620,13 +2620,13 @@
           "x": 12,
           "y": 13
         },
-        "id": 38,
+        "id": 37,
         "options": {
           "legend": {
             "calcs": [],
-            "displayMode": "hidden",
-            "placement": "right",
-            "showLegend": false
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
           },
           "tooltip": {
             "mode": "single",
@@ -2737,14 +2737,14 @@
               "uid": "super_mega_cool_datasource"
             },
             "editorMode": "code",
-            "expr": "100 - ((node_filesystem_avail_bytes{mountpoint=\"/\",fstype!=\"rootfs\"} * 100) /  node_filesystem_size_bytes{mountpoint=\"/\",fstype!=\"rootfs\"})",
+            "expr": "sum(node_network_transmit_bytes_total) by (instance) / 1024 / 1024",
             "instant": false,
             "legendFormat": "__auto",
             "range": true,
             "refId": "A"
           }
         ],
-        "title": "Root FS usage",
+        "title": "Network transmit (in Mb)",
         "type": "timeseries"
       },
       {
@@ -2814,7 +2814,7 @@
           "x": 12,
           "y": 21
         },
-        "id": 40,
+        "id": 38,
         "options": {
           "legend": {
             "calcs": [],
@@ -2834,32 +2834,32 @@
               "uid": "super_mega_cool_datasource"
             },
             "editorMode": "code",
-            "expr": "sum(node_network_transmit_bytes_total) by (instance) / 1024 / 1024",
+            "expr": "100 - ((node_filesystem_avail_bytes{mountpoint=\"/\",fstype!=\"rootfs\"} * 100) /  node_filesystem_size_bytes{mountpoint=\"/\",fstype!=\"rootfs\"})",
             "instant": false,
             "legendFormat": "__auto",
             "range": true,
             "refId": "A"
           }
         ],
-        "title": "Network transmit (in Mb)",
+        "title": "Root FS usage",
         "type": "timeseries"
       }
     ],
-    "refresh": "",
+    "refresh": "1m",
     "schemaVersion": 39,
     "tags": [],
     "templating": {
       "list": []
     },
     "time": {
-      "from": "2024-10-14T09:25:06.762Z",
-      "to": "2024-10-16T09:25:06.770Z"
+      "from": "now-1h",
+      "to": "now"
     },
     "timepicker": {},
     "timezone": "browser",
     "title": "Class Schedule",
     "uid": "schedule_dashboard",
-    "version": 3,
+    "version": 6,
     "weekStart": ""
   },
   "overwrite": true
