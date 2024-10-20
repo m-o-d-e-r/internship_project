@@ -1,0 +1,10 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: postgres
+  namespace: default
+data:
+  POSTGRES_DB: schedule
+  # TODO: move sensitive data to secrets
+  POSTGRES_USER: simple_user
+  POSTGRES_PASSWORD: password

@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  mongo
+  namespace: default
+  labels:
+    app:  mongo
+spec:
+  selector:
+    matchLabels:
+      app: mongo
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app:  mongo
+    spec:
+      containers:
+        - name:  mongo
+          image:  mongo:latest
+          ports:
+          - containerPort:  27017
+            name:  mongo
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 100m
+              memory: 100Mi
+          env:
+            - name: MONGO_INITDB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo
+                  key: MONGO_INITDB_DATABASE
+            # TODO: get data from secrets
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo
+                  key: MONGO_INITDB_ROOT_USERNAME
+            # TODO: get data from secrets
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo
+                  key: MONGO_INITDB_ROOT_PASSWORD

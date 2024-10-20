@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  postgres
+  namespace: default
+  labels:
+    app:  postgres
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app:  postgres
+    spec:
+      # initContainers:
+      # TODO: add container to restore database from dump
+      containers:
+        - name:  postgres
+          image:  postgres:latest
+          ports:
+            - containerPort: 5432
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 100m
+              memory: 100Mi
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres
+                  key: POSTGRES_DB
+            # TODO: get data from secrets
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres
+                  key: POSTGRES_USER
+            # TODO: get data from secrets
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres
+                  key: POSTGRES_PASSWORD
+      volumes:
+        - name: postgres-volume
+          persistentVolumeClaim:
+            claimName: postgres-nfs-pvc
