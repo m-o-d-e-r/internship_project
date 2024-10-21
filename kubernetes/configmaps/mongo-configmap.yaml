@@ -5,6 +5,3 @@ metadata:
   namespace: default
 data:
   MONGO_INITDB_DATABASE: schedules
-  # TODO: move sensitive data to secrets
-  MONGO_INITDB_ROOT_USERNAME: admin
-  MONGO_INITDB_ROOT_PASSWORD: admin

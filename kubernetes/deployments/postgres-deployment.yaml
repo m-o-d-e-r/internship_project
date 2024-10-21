@@ -35,19 +35,13 @@ spec:
                 configMapKeyRef:
                   name: postgres
                   key: POSTGRES_DB
-            # TODO: get data from secrets
             - name: POSTGRES_USER
               valueFrom:
-                configMapKeyRef:
-                  name: postgres
+                secretKeyRef:
+                  name: schedule-app-secrets
                   key: POSTGRES_USER
-            # TODO: get data from secrets
             - name: POSTGRES_PASSWORD
               valueFrom:
-                configMapKeyRef:
-                  name: postgres
+                secretKeyRef:
+                  name: schedule-app-secrets
                   key: POSTGRES_PASSWORD
-      volumes:
-        - name: postgres-volume
-          persistentVolumeClaim:
-            claimName: postgres-nfs-pvc

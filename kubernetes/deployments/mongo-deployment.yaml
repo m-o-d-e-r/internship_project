@@ -34,15 +34,13 @@ spec:
                 configMapKeyRef:
                   name: mongo
                   key: MONGO_INITDB_DATABASE
-            # TODO: get data from secrets
             - name: MONGO_INITDB_ROOT_USERNAME
               valueFrom:
-                configMapKeyRef:
-                  name: mongo
+                secretKeyRef:
+                  name: schedule-app-secrets
                   key: MONGO_INITDB_ROOT_USERNAME
-            # TODO: get data from secrets
             - name: MONGO_INITDB_ROOT_PASSWORD
               valueFrom:
-                configMapKeyRef:
-                  name: mongo
+                secretKeyRef:
+                  name: schedule-app-secrets
                   key: MONGO_INITDB_ROOT_PASSWORD
