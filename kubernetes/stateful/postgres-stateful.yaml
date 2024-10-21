@@ -1,25 +1,24 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name:  postgres
+  name: postgres
   namespace: default
   labels:
-    app:  postgres
+    app: postgres
 spec:
   selector:
     matchLabels:
       app: postgres
+  serviceName: postgres
   replicas: 1
   template:
     metadata:
       labels:
-        app:  postgres
+        app: postgres
     spec:
-      # initContainers:
-      # TODO: add container to restore database from dump
       containers:
-        - name:  postgres
-          image:  postgres:latest
+        - name: postgres
+          image: postgres:latest
           ports:
             - containerPort: 5432
           resources:
@@ -45,3 +44,16 @@ spec:
                 secretKeyRef:
                   name: schedule-app-secrets
                   key: POSTGRES_PASSWORD
+          volumeMounts:
+            - name: postgres-persistent-storage
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-persistent-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 3Gi

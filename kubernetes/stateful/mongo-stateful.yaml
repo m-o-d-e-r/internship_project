@@ -1,26 +1,27 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name:  mongo
+  name: mongo
   namespace: default
   labels:
-    app:  mongo
+    app: mongo
 spec:
+  serviceName: mongo
+  replicas: 1
   selector:
     matchLabels:
       app: mongo
-  replicas: 1
   template:
     metadata:
       labels:
-        app:  mongo
+        app: mongo
     spec:
       containers:
-        - name:  mongo
-          image:  mongo:latest
+        - name: mongo
+          image: mongo:latest
           ports:
-          - containerPort:  27017
-            name:  mongo
+            - containerPort: 27017
+              name: mongo
           resources:
             requests:
               cpu: 100m
@@ -44,3 +45,15 @@ spec:
                 secretKeyRef:
                   name: schedule-app-secrets
                   key: MONGO_INITDB_ROOT_PASSWORD
+          volumeMounts:
+            - name: mongo-persistent-storage
+              mountPath: /data/db
+  volumeClaimTemplates:
+    - metadata:
+        name: mongo-persistent-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 3Gi

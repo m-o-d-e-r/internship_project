@@ -6,7 +6,7 @@ metadata:
 spec:
   selector:
     app: redis
-  type: ClusterIP
+  clusterIP: None
   ports:
     - name: redis
       protocol: TCP
