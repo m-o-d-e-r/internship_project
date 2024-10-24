@@ -4,3 +4,6 @@ create_schedule_app_secrets:
 
 restore_db:
 	etc/restore_db.sh
+
+run_volume_provisioner:
+	./scripts/run_volume_provisioner.sh

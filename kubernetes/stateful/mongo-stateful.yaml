@@ -53,7 +53,7 @@ spec:
         name: mongo-persistent-storage
       spec:
         accessModes: ["ReadWriteOnce"]
-        storageClassName: standard
+        storageClassName: nfs-client
         resources:
           requests:
             storage: 3Gi
