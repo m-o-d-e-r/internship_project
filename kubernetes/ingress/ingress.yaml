@@ -4,6 +4,7 @@ metadata:
   name: ingress
   namespace: default
 spec:
+  ingressClassName: nginx
   rules:
     - host: class-schedule
       http:
