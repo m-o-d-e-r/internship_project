@@ -15,3 +15,7 @@ variable "vm_os_image_name" {
 variable "vm_os_image_format" {
   type = string
 }
+
+variable "auth_public_key" {
+  type = string
+}

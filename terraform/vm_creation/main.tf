@@ -6,7 +6,9 @@ resource "libvirt_volume" "fedora_iso" {
 }
 
 data "template_file" "user_data" {
-  template = file("${path.module}/config/cloud_init.yml")
+  template = templatefile("${path.module}/config/cloud_init.yml", {
+    auth_public_key = var.auth_public_key
+  })
 }
 
 resource "libvirt_cloudinit_disk" "fedora_cloud_init" {
