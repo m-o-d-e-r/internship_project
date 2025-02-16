@@ -13,7 +13,7 @@ provider "aws" {
 
 module "schedule_web" {
   source              = "./modules/ec2_instance"
-  ami                 = "ami-0b45ae66668865cd6"
+  ami                 = var.vm_public_key
   instance_type       = "t2.micro"
   subnet_id           = aws_subnet.instances_subnet.id
   key_name            = aws_key_pair.instances_key_pair.key_name
@@ -23,7 +23,7 @@ module "schedule_web" {
 
 module "schedule_api" {
   source              = "./modules/ec2_instance"
-  ami                 = "ami-0b45ae66668865cd6"
+  ami                 = var.vm_public_key
   instance_type       = "t2.micro"
   subnet_id           = aws_subnet.instances_subnet.id
   key_name            = aws_key_pair.instances_key_pair.key_name
@@ -33,7 +33,7 @@ module "schedule_api" {
 
 module "schedule_dbs" {
   source              = "./modules/ec2_instance"
-  ami                 = "ami-0b45ae66668865cd6"
+  ami                 = var.vm_public_key
   instance_type       = "t2.micro"
   subnet_id           = aws_subnet.dbs_subnet.id
   key_name            = aws_key_pair.instances_key_pair.key_name
@@ -43,7 +43,7 @@ module "schedule_dbs" {
 
 module "schedule_prometheus" {
   source              = "./modules/ec2_instance"
-  ami                 = "ami-0b45ae66668865cd6"
+  ami                 = var.vm_public_key
   instance_type       = "t2.micro"
   subnet_id           = aws_subnet.monitoring_subnet.id
   key_name            = aws_key_pair.instances_key_pair.key_name
