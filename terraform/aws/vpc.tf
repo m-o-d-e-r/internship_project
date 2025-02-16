@@ -79,9 +79,9 @@ resource "aws_security_group" "schedule_security_group" {
   }
 
   ingress {
-    from_port = 0
-    to_port = 0
-    protocol = "icmp"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "icmp"
     cidr_blocks = ["192.168.0.0/16"]
   }
 
@@ -121,9 +121,9 @@ resource "aws_security_group" "dbs_security_group" {
   }
 
   ingress {
-    from_port = 0
-    to_port = 0
-    protocol = "icmp"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "icmp"
     cidr_blocks = ["192.168.0.0/16"]
   }
 

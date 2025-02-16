@@ -45,20 +45,21 @@ resource "aws_instance" "api" {
 
   user_data_replace_on_change = true
   user_data = templatefile("./config/api_cloud_init.yaml", {
-    sftp_instance_ip      = aws_instance.sftp.private_ip,
+    api_public_key        = var.api_public_key
+    sftp_instance_ip      = aws_instance.sftp.private_ip
     sftp_user_private_key = base64encode(file("./keys/id_ed25519"))
     download_api_tar      = base64encode(file("./scripts/download_api_tar.sh"))
     update_hosts          = base64encode(file("./scripts/update_hosts.sh"))
     db_address            = aws_db_instance.postgres.address
     redis_address         = aws_elasticache_cluster.redis.cache_nodes[0].address
-#    mongo_address         = aws_docdb_cluster_instance.mongo_cluster_instance.endpoint
-    restore_db_script     = base64encode(file("./scripts/restore_db.sh"))
+    #    mongo_address         = aws_docdb_cluster_instance.mongo_cluster_instance.endpoint
+    restore_db_script = base64encode(file("./scripts/restore_db.sh"))
   })
 
   depends_on = [
     aws_instance.sftp,
     aws_db_instance.postgres,
     aws_elasticache_cluster.redis,
-#    aws_docdb_cluster_instance.mongo_cluster_instance
+    #    aws_docdb_cluster_instance.mongo_cluster_instance
   ]
 }

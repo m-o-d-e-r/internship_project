@@ -44,7 +44,8 @@ resource "aws_instance" "web" {
 
   user_data_replace_on_change = true
   user_data = templatefile("./config/web_cloud_init.yaml", {
-    sftp_instance_ip      = aws_instance.sftp.private_ip,
+    web_public_key        = var.web_public_key
+    sftp_instance_ip      = aws_instance.sftp.private_ip
     sftp_user_private_key = base64encode(file("./keys/id_ed25519"))
     download_web_tar      = base64encode(file("./scripts/download_web_tar.sh"))
   })

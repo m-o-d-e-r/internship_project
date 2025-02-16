@@ -21,7 +21,7 @@ users:
       - cloud-users
       - sftp-users
     ssh-authorized-keys:
-     - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAf6V4g7ahli0x4Z8D3cbC3ZeT5li7p63zldIU0Wcijj
+     - ${sftp_public_key}
     lock_passwd: true
   - name: admin # use instead of ec2-user
     groups:
@@ -30,7 +30,7 @@ users:
     sudo:
       - ALL=(ALL:ALL) NOPASSWD:ALL
     ssh-authorized-keys:
-     - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAf6V4g7ahli0x4Z8D3cbC3ZeT5li7p63zldIU0Wcijj
+     - ${sftp_public_key}
     lock_passwd: true
   - name: sftpuser # artifacts synchronization
     primary_group: sftpuser
@@ -38,7 +38,7 @@ users:
       - cloud-users
     homedir: /var/sftp
     ssh-authorized-keys:
-     - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAf6V4g7ahli0x4Z8D3cbC3ZeT5li7p63zldIU0Wcijj
+     - ${sftp_public_key}
     lock_passwd: true
 
 write_files:

@@ -24,7 +24,7 @@ users:
     sudo:
       - ALL=(ALL:ALL) NOPASSWD:ALL
     ssh-authorized-keys:
-     - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAf6V4g7ahli0x4Z8D3cbC3ZeT5li7p63zldIU0Wcijj
+     - ${web_public_key}
     lock_passwd: true
 
 write_files:
