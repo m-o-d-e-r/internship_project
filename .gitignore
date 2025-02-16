@@ -6,6 +6,11 @@
 /src/test/resources/hibernatetest.properties
 /schedule_logs
 
+.vscode/
+
+.ansible/
+
+.venv/
 .env
 
 .terraform/

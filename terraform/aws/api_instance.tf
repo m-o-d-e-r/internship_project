@@ -1,7 +1,7 @@
 
 resource "aws_key_pair" "api_key_pair" {
   key_name   = "api_instance_key"
-  public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAf6V4g7ahli0x4Z8D3cbC3ZeT5li7p63zldIU0Wcijj"
+  public_key = var.api_public_key
 }
 
 
@@ -22,7 +22,7 @@ resource "aws_route_table_association" "api_public_route_association" {
 
 
 resource "aws_instance" "api" {
-  ami           = "ami-0b45ae66668865cd6" # Amazon Linux
+  ami           = var.vm_ami
   instance_type = "t2.micro"
 
   key_name = aws_key_pair.api_key_pair.key_name
